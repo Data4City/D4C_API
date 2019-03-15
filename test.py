@@ -34,7 +34,6 @@ class TestKitResource(MyTestCase):
         assert_dict = {'id': 1, 'name': "Fake sensor", 'model': "Fakerino"}
         route = '/v1/sensor'
         result = self.simulate_post(route, json=create_body)
-        print(result)
         self.assertEqual(assert_dict, result.json)
         self.assertEqual(result.status, falcon.HTTP_201)
 
@@ -44,15 +43,16 @@ class TestKitResource(MyTestCase):
         assert_dict = {'id': 1,
                        'sensors_used': [{'id': 1, 'model': 'Fakerino', 'name': 'Fake sensor'}],
                        'serial': 'E00R000050600000'}
+
+        # Error because no response
+        result = self.simulate_get(route)
+        self.assertEqual({'error': "Bad Request"}, result.json)
+
         result = self.simulate_get(route, json={'id': 1})
         result_jay = result.json
         result_jay.pop('created_at')
         self.assertEqual(assert_dict, result_jay)
 
-
-        # Error because no response
-        result = self.simulate_get(route)
-        self.assertEqual({'error': "Bad Request"}, result.json)
 
         # Error because id that doesn't exist
         result = self.simulate_get(route, json={'id': 2})
