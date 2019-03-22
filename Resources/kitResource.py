@@ -17,10 +17,10 @@ class KitResource(object):
                 resp.media = response
             else:
                 resp.status = falcon.HTTP_404
-                resp.body = {'error': "Box with id {} doesn't exist".format(kit_id)}
+                resp.media = {'error': "Box with id {} doesn't exist".format(kit_id)}
         except falcon.HTTPBadRequest as e:
             resp.status = falcon.HTTP_400
-            resp.body = {'error': e.description}
+            resp.media = {'error': e.description}
 
     def on_post(self, req, resp):
         try:
@@ -39,4 +39,4 @@ class KitResource(object):
             resp.body = err.description
         except Exception as err:
             resp.status = falcon.HTTP_400
-            resp.body = err.description
+            resp.media = err.description

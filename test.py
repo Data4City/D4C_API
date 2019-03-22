@@ -46,7 +46,7 @@ class TestKitResource(MyTestCase):
 
         # Error because no response
         result = self.simulate_get(route)
-        self.assertEqual({'error': "Bad Request"}, result.json)
+        self.assertEqual({'error': "Field 'id' is required"}, result.json)
 
         result = self.simulate_get(route, json={'id': 1})
         result_jay = result.json
