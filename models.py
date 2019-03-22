@@ -7,9 +7,12 @@ from sqlalchemy.orm import relationship, backref
 Base = declarative_base()
 
 sensors_in_kit = Table('sensors_in_kit', Base.metadata,
-    Column('kit_id', Integer, ForeignKey('kit.id')),
-    Column('sensor_id', Integer, ForeignKey('sensor.id'))
-)
+                       Column('kit_id', Integer, ForeignKey('kit.id')),
+                       Column('sensor_id', Integer, ForeignKey('sensor.id')))
+
+measurements_in_sensor = Table('measurements_in_sensor', Base.metadata,
+                               Column('sensor_id', Integer, ForeignKey('sensor.id')),
+                               Column('measurement_id', Integer, ForeignKey('measurement.id')))
 
 
 class Kit(Base):
@@ -19,8 +22,6 @@ class Kit(Base):
     serial = Column('serial', String(16))
     created_at = Column("timestamp", DateTime(timezone=True), default=datetime.now())
     sensors_used = relationship('Sensor', secondary=sensors_in_kit, backref=backref('kits', lazy='dynamic'))
-
-    # measurement_data = relationship('Value', backref="kit")
 
     def __init__(self, serial):
         self.serial = serial
@@ -39,21 +40,20 @@ class Kit(Base):
         session.commit()
 
 
-
 class Sensor(Base):
     __tablename__ = "sensor"
     id = Column('id', Integer, primary_key=True)
     name = Column("name", String(40), nullable=False)
     model = Column("model", String(40), nullable=False)
-    #kit_id = Column(Integer, ForeignKey('kit.id'))
-    measurements = relationship('Measurement')
+    measurements = relationship('Measurement', secondary=measurements_in_sensor, backref=backref('sensors', lazy='dynamic'))
 
     @property
     def as_dict(self):
         return {
             'id': self.id,
             'name': self.name,
-            'model': self.model
+            'model': self.model,
+            'measurements': [m.as_dict for m in self.measurements]
         }
 
     def add_kit(self, kit, session):
@@ -64,10 +64,10 @@ class Sensor(Base):
         session.add(self)
         session.commit()
 
+
 class Measurement(Base):
     __tablename__ = "measurement"
     id = Column('id', Integer, primary_key=True)
-    measured_by = Column(Integer, ForeignKey('sensor.id'), nullable=False)
     symbol = Column('symbol', String(5))
     name = Column('name', String(30))
 
@@ -78,9 +78,13 @@ class Measurement(Base):
             'name': self.name,
         }
 
+    def add_sensor(self, sensor, session):
+        self.sensors.append(sensor)
+        session.commit()
+
     def save(self, session):
-       session.add(self)
-       session.commit()
+        session.add(self)
+        session.commit()
 
 
 class Value(Base):
@@ -88,8 +92,6 @@ class Value(Base):
     id = Column('id', Integer, primary_key=True)
     data = Column("data", Float)
     timestamp = Column("timestamp", DateTime(timezone=True))
-    belongs_to = Column(Integer, ForeignKey('kit.id'), nullable=False)
-    measurement = Column(Integer, ForeignKey('measurement.id'), nullable=False)
 
     @property
     def as_dict(self):
@@ -102,7 +104,6 @@ class Value(Base):
     def save(self, session):
         session.add(self)
         session.commit()
-
 
 
 def __reset_db__():
