@@ -28,14 +28,14 @@ class KitResource(object):
             if not self.session.query(exists().where(Kit.serial == serial)).scalar():
                 b = Kit(serial)
                 b.save(self.session)
-                resp.media = b.as_dict
+                resp.json = b.as_dict
                 resp.status = falcon.HTTP_201
             else:
                 resp.status = falcon.HTTP_403
-                resp.media = {"error": "Box already exists"}
+                resp.json = {"error": "Box already exists"}
         except falcon.HTTPBadRequest as err:
             resp.status = falcon.HTTP_400
-            resp.body = err.description
+            resp.json = {"error": err.description}
         except Exception as err:
             resp.status = falcon.HTTP_400
-            resp.media = err.description
+            resp.json = {"error": err.description}
