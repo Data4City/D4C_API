@@ -37,16 +37,32 @@ class TestKitResource(MyTestCase):
         self.assertEqual(assert_dict, result.json)
         self.assertEqual(result.status, falcon.HTTP_201)
 
-    def test_03_sensor_put_measurement(self):
-        route = '/v1/sensor'
+    def test_03_measurement_post(self):
+        route = '/v1/measurement'
         measurement_create = {"sensor_id": 1, "symbol": "m", "name": "meters"}
         assert_dict = {'id': 1, 'name': "Fake sensor", 'model': "Fakerino", 'measurements': [{'name': 'meters', 'symbol': 'm'}],}
+
+        result = self.simulate_post(route, json=measurement_create)
+
+        self.assertEqual(assert_dict, result.json)
+
+
+    def test_04_measurement_put(self):
+        route = '/v1/measurement'
+        measurement_create = {"measurement_id": 1, "symbol": "kP", "name": "kiloPascal"}
+        assert_dict = {'success': 'Measurement with id 1 updated successfully'}
 
         result = self.simulate_put(route, json=measurement_create)
 
         self.assertEqual(assert_dict, result.json)
 
-    def test_04_kit_get(self):
+        # Test filtering to match model
+
+        req_body = {"measurement_id": 1, "useless": "data", "is":"useless"}
+        result = self.simulate_put(route, json=req_body)
+        self.assertEqual({"error": "empty request"}, result.json)
+
+    def test_05_kit_get(self):
         route = '/v1/kit'
 
         assert_dict = {'id': 1,
