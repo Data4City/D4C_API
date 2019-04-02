@@ -22,6 +22,7 @@ class Kit(Base):
     serial = Column('serial', String(16))
     created_at = Column("timestamp", DateTime(timezone=True), default=datetime.now())
     sensors_used = relationship('Sensor', secondary=sensors_in_kit, backref=backref('kits', lazy='dynamic'))
+    values = relationship("Value", back_populates="kit")
 
     def __init__(self, serial):
         self.serial = serial
@@ -45,7 +46,8 @@ class Sensor(Base):
     id = Column('id', Integer, primary_key=True)
     name = Column("name", String(40), nullable=False)
     model = Column("model", String(40), nullable=False)
-    measurements = relationship('Measurement', secondary=measurements_in_sensor, backref=backref('sensors', lazy='dynamic'))
+    measurements = relationship('Measurement', secondary=measurements_in_sensor,
+                                backref=backref('sensors', lazy='dynamic'))
 
     @property
     def as_dict(self):
@@ -92,6 +94,15 @@ class Value(Base):
     id = Column('id', Integer, primary_key=True)
     data = Column("data", Float)
     timestamp = Column("timestamp", DateTime(timezone=True))
+    measurement_id = Column('measurement_id', Integer, ForeignKey('measurement.id'))
+    kit_id = Column('kit_id', Integer, ForeignKey('kit.id'))
+    kit = relationship("Kit", back_populates="values")
+
+    def __init__(self, data, timestamp, kit, measurement):
+        self.data = data
+        self.timestamp = timestamp
+        self.kit_id = kit
+        self.measurement_id = measurement
 
     @property
     def as_dict(self):
@@ -103,7 +114,6 @@ class Value(Base):
 
     def save(self, session):
         session.add(self)
-        session.commit()
 
 
 def __reset_db__():

@@ -40,12 +40,12 @@ class TestKitResource(MyTestCase):
     def test_03_measurement_post(self):
         route = '/v1/measurement'
         measurement_create = {"sensor_id": 1, "symbol": "m", "name": "meters"}
-        assert_dict = {'id': 1, 'name': "Fake sensor", 'model': "Fakerino", 'measurements': [{'name': 'meters', 'symbol': 'm'}],}
+        assert_dict = {'id': 1, 'name': "Fake sensor", 'model': "Fakerino",
+                       'measurements': [{'name': 'meters', 'symbol': 'm'}], }
 
         result = self.simulate_post(route, json=measurement_create)
 
         self.assertEqual(assert_dict, result.json)
-
 
     def test_04_measurement_put(self):
         route = '/v1/measurement'
@@ -58,7 +58,7 @@ class TestKitResource(MyTestCase):
 
         # Test filtering to match model
 
-        req_body = {"measurement_id": 1, "useless": "data", "is":"useless"}
+        req_body = {"measurement_id": 1, "useless": "data", "is": "useless"}
         result = self.simulate_put(route, json=req_body)
         self.assertEqual({"error": "empty request"}, result.json)
 
@@ -68,7 +68,7 @@ class TestKitResource(MyTestCase):
         assert_dict = {'id': 1,
                        'sensors_used': [
                            {'id': 1, 'model': 'Fakerino', 'name': 'Fake sensor',
-                            'measurements': [{'name': 'meters', 'symbol': 'm'}],}
+                            'measurements': [{'name': 'meters', 'symbol': 'm'}]}
                        ],
                        'serial': 'E00R000050600000'}
 
@@ -84,6 +84,16 @@ class TestKitResource(MyTestCase):
         result_jay = result.json
         result_jay.pop('created_at')
         self.assertEqual(assert_dict, result_jay)
+
+    def test_06_value_post(self):
+        import datetime
+        route = "/v1/value"
+        date = datetime.datetime.now()
+        data = [{"value": i, "timestamp": str(date), "measurement_id": 1, "kit_id": 1} for i in range(5)]
+
+        result = self.simulate_post(route, json=data[0])
+
+        result = self.simulate_post(route, json=data)
 
 
 if __name__ == '__main__':
