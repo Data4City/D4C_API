@@ -4,7 +4,7 @@ from sqlalchemy import exists
 from models import Kit
 
 
-class KitResource(object):
+class KitResource:
 
     def on_get(self, req, resp):
         try:

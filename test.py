@@ -89,11 +89,13 @@ class TestKitResource(MyTestCase):
         import datetime
         route = "/v1/value"
         date = datetime.datetime.now()
-        data = [{"value": i, "timestamp": str(date), "measurement_id": 1, "kit_id": 1} for i in range(5)]
+        data = [{"data": i*5, "timestamp": str(date), "measurement_id": 1 } for i in range(5)]
+        result = self.simulate_post(route, json={"data":data[0], "kit_id": 1})
+        self.assertEqual(result.status, falcon.HTTP_201)
 
-        result = self.simulate_post(route, json=data[0])
-
+        data = {"data": data, "kit_id": 1}
         result = self.simulate_post(route, json=data)
+        self.assertEqual(result.status, falcon.HTTP_201)
 
 
 if __name__ == '__main__':

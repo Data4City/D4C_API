@@ -16,7 +16,6 @@ class MeasurementResource:
 
             measurement = get_or_create(self.session, Measurement, symbol=symbol, name=name)
             measurement.add_sensor(sensor, self.session)
-
             resp.status = falcon.HTTP_201
             resp.json = sensor.as_dict
 
@@ -26,9 +25,6 @@ class MeasurementResource:
 
     def on_put(self, req, resp):
         try:
-            # sensor_id = req.get_json('sensor_id', dtype=int)
-            # sensor = get_or_create(self.session, Sensor, id=sensor_id)
-
             measurement_id = req.get_json('measurement_id', dtype=int)
 
             filtered_req = filter_request(Measurement, req.json)
