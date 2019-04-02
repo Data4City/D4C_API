@@ -16,18 +16,18 @@ class ValueResource:
             raise falcon.HTTPBadRequest
 
     def on_post(self, req, resp):
-        # try:
-        kit_id = req.get_json("kit_id", dtype=int)
-        if self.session.query(exists().where(Kit.id == kit_id)).scalar():
-            data = req.get_json("data")
-            if type(data) is list:
-                for entry in data:
-                    self.process_entry(entry, kit_id)
-            else:
-                self.process_entry(data, kit_id)
-            self.session.commit()
+        try:
+            kit_id = req.get_json("kit_id", dtype=int)
+            if self.session.query(exists().where(Kit.id == kit_id)).scalar():
+                data = req.get_json("data")
+                if type(data) is list:
+                    for entry in data:
+                        self.process_entry(entry, kit_id)
+                else:
+                    self.process_entry(data, kit_id)
+                self.session.commit()
 
-        resp.status = falcon.HTTP_201
-    # except falcon.HTTPBadRequest as err:
-    #     resp.status = falcon.HTTP_400
-    #     resp.json = {"error": err.description}
+            resp.status = falcon.HTTP_201
+        except falcon.HTTPBadRequest as err:
+            resp.status = falcon.HTTP_400
+            resp.json = {"error": err.description}
