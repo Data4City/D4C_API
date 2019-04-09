@@ -74,7 +74,8 @@ class TestKitResource(MyTestCase):
 
         # Error because no response
         result = self.simulate_get(route)
-        self.assertEqual({'error': "Field 'id' is required"}, result.json)
+
+        self.assertEqual({'error': "Field 'serial' or 'id' is required"}, result.json)
 
         # Error because id that doesn't exist
         result = self.simulate_get(route, json={'id': 2})
@@ -85,9 +86,15 @@ class TestKitResource(MyTestCase):
         result_jay.pop('created_at')
         self.assertEqual(assert_dict, result_jay)
 
+        #KIT Get from serial
+        result = self.simulate_get(route, json={'serial': 'E00R000050600000'})
+        result_jay = result.json
+        result_jay.pop('created_at')
+        self.assertEqual(assert_dict, result_jay)
+
     def test_06_value_post(self):
         import datetime
-        route = "/v1/value"
+        route = "/v1/i2c"
         date = datetime.datetime.now()
         data = [{"data": i*5, "timestamp": str(date), "measurement_id": 1 } for i in range(5)]
         result = self.simulate_post(route, json={"data":data[0], "kit_id": 1})

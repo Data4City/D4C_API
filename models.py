@@ -70,7 +70,7 @@ class Sensor(Base):
 class Measurement(Base):
     __tablename__ = "measurement"
     id = Column('id', Integer, primary_key=True)
-    symbol = Column('symbol', String(5))
+    symbol = Column('symbol', String(10))
     name = Column('name', String(30))
 
     @property

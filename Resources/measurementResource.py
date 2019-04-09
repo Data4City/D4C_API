@@ -11,8 +11,8 @@ class MeasurementResource:
 
             sensor = get_or_create(self.session, Sensor, id=sensor_id)
 
-            symbol = req.get_json('symbol', dtype=str, max=40)
-            name = req.get_json('name', dtype=str, max=40)
+            symbol = req.get_json('symbol', dtype=str, max=10)
+            name = req.get_json('name', dtype=str, max=30)
 
             measurement = get_or_create(self.session, Measurement, symbol=symbol, name=name)
             measurement.add_sensor(sensor, self.session)

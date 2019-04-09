@@ -18,5 +18,5 @@ def get_app() -> API:
     _app.add_route('/v1/kit', KitResource())
     _app.add_route('/v1/sensor', SensorResource())
     _app.add_route('/v1/measurement', MeasurementResource())
-    _app.add_route('/v1/value', ValueResource())
+    _app.add_route('/v1/i2c', ValueResource())
     return _app
