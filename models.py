@@ -78,6 +78,7 @@ class Measurement(Base):
         return {
             'symbol': self.symbol,
             'name': self.name,
+            "id": self.id
         }
 
     def add_sensor(self, sensor, session):

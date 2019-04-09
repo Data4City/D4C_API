@@ -41,7 +41,7 @@ class TestKitResource(MyTestCase):
         route = '/v1/measurement'
         measurement_create = {"sensor_id": 1, "symbol": "m", "name": "meters"}
         assert_dict = {'id': 1, 'name': "Fake sensor", 'model': "Fakerino",
-                       'measurements': [{'name': 'meters', 'symbol': 'm'}], }
+                       'measurements': [{'name': 'meters', 'symbol': 'm', 'id': 1}], }
 
         result = self.simulate_post(route, json=measurement_create)
 
@@ -68,7 +68,7 @@ class TestKitResource(MyTestCase):
         assert_dict = {'id': 1,
                        'sensors_used': [
                            {'id': 1, 'model': 'Fakerino', 'name': 'Fake sensor',
-                            'measurements': [{'name': 'meters', 'symbol': 'm'}]}
+                            'measurements': [{'name': 'meters', 'symbol': 'm', "id": 1 },]}
                        ],
                        'serial': 'E00R000050600000'}
 

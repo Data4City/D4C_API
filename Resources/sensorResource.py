@@ -7,6 +7,7 @@ from models import Kit, Sensor
 class SensorResource:
     def on_post(self, req, resp):
         try:
+
             name = req.get_json('name', dtype=str, max=40)
             model = req.get_json('model', dtype=str, max=40)
             kit_id = req.get_json('kit_id', dtype=int)
