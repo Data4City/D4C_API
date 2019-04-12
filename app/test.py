@@ -1,8 +1,10 @@
-import models
 import unittest
+
 import falcon
 from falcon import testing
-from routes import get_app
+
+from app import models
+from app.routes import get_app
 
 
 class MyTestCase(testing.TestCase):

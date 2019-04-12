@@ -3,7 +3,7 @@ from datetime import datetime
 import falcon
 from sqlalchemy import exists
 
-from models import Kit, Value
+from app.models import Kit, Value
 
 
 class ValueResource:

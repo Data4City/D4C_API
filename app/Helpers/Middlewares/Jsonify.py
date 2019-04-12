@@ -1,9 +1,10 @@
-from datetime import datetime
 import json
 import re
+from datetime import datetime
 
 import falcon
 import six
+
 
 #Modified version of https://raw.githubusercontent.com/AndreiRegiani/falcon-jsonify/master/falcon_jsonify/__init__.py
 class DateTimeEncoder(json.JSONEncoder):
