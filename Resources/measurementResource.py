@@ -8,13 +8,12 @@ class MeasurementResource:
     def on_post(self, req, resp):
         try:
             sensor_id = req.get_json('sensor_id', dtype=int)
-
-            sensor = get_or_create(self.session, Sensor, id=sensor_id)
-
             symbol = req.get_json('symbol', dtype=str, max=10)
             name = req.get_json('name', dtype=str, max=30)
 
+            sensor = get_or_create(self.session, Sensor, id=sensor_id)
             measurement = get_or_create(self.session, Measurement, symbol=symbol, name=name)
+
             measurement.add_sensor(sensor, self.session)
             resp.status = falcon.HTTP_201
             resp.json = sensor.as_dict

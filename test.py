@@ -27,7 +27,7 @@ class TestKitResource(MyTestCase):
 
         # Post again to test if it doesnt' create a second one .
         result = self.simulate_post(route, json=create_body)
-        self.assertEqual({'error': "Box already exists"}, result.json)
+        self.assertEqual({'error': "Kit already exists"}, result.json)
 
     def test_02_sensor_post(self):
         create_body = {'kit_id': 1, 'name': "Fake sensor", 'model': "Fakerino"}
@@ -79,7 +79,7 @@ class TestKitResource(MyTestCase):
 
         # Error because id that doesn't exist
         result = self.simulate_get(route, json={'id': 2})
-        self.assertEqual({'error': "Box with id 2 doesn't exist"}, result.json)
+        self.assertEqual({'error': "Kit with id 2 doesn't exist"}, result.json)
 
         result = self.simulate_get(route, json={'id': 1})
         result_jay = result.json

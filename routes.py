@@ -1,11 +1,11 @@
 import falcon
-import falcon_jsonify
 from falcon import API
-from Resources import *
-from Helpers.Middlewares import SQLAlchemySessionManager, Jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
+
+from Helpers.Middlewares import SQLAlchemySessionManager, Jsonify
+from Resources import *
 
 engine = create_engine("sqlite:///sensor.db")#, echo=True)
 
