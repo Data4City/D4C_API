@@ -1,3 +1,2 @@
-from app.routes import get_app
-
+from routes import get_app
 app = get_app()

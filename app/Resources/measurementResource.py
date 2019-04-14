@@ -1,7 +1,7 @@
 import falcon
 
-from app.Helpers.helper_functions import *
-from app.models import Measurement, Sensor
+from Helpers.helper_functions import *
+from models import Measurement, Sensor
 
 
 class MeasurementResource:

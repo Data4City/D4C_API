@@ -3,9 +3,8 @@ import unittest
 import falcon
 from falcon import testing
 
-from app import models
-from app.routes import get_app
-
+from routes import get_app
+import models
 
 class MyTestCase(testing.TestCase):
     def setUp(self):

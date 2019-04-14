@@ -4,8 +4,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 
-from app.Helpers.Middlewares import SQLAlchemySessionManager, Jsonify
-from app.Resources import *
+from Helpers.Middlewares import SQLAlchemySessionManager, Jsonify
+from Resources import *
 
 engine = create_engine("sqlite:///sensor.db")#, echo=True)
 

@@ -1,7 +1,7 @@
 import falcon
 
-from app.Helpers.helper_functions import get_or_create
-from app.models import Kit, Sensor
+from Helpers.helper_functions import get_or_create
+from models import Kit, Sensor
 
 
 class SensorResource:

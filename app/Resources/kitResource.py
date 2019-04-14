@@ -1,7 +1,7 @@
 import falcon
 from sqlalchemy import exists
 
-from app.models import Kit
+from models import Kit
 
 
 class KitResource:
