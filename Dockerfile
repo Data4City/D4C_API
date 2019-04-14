@@ -6,7 +6,7 @@ EXPOSE 80
 
 
 RUN apt-get update -y
-RUN apt-get install -y python3 python-pip-whl python3-pip python-setuptools curl
+RUN apt-get install -y python3 python-pip-whl python3-pip python-setuptools curl SQLAlchemy
 RUN rm -rf /var/lib/apt/lists/*
 
 # Install gunicorn
