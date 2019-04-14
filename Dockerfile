@@ -11,6 +11,7 @@ RUN rm -rf /var/lib/apt/lists/*
 
 COPY ./app /app
 WORKDIR /app
+RUN pip3 install wheel
 RUN pip3 install -r /app/requirements.txt
 
 CMD ["gunicorn", "-b", "0.0.0.0:80", "main:app"]
