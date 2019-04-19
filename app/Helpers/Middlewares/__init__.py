@@ -1,3 +1,3 @@
 from Helpers.Middlewares.sql_session_manager import SQLAlchemySessionManager
 from Helpers.Middlewares import Jsonify
-from Helpers.Middlewares import ResponseLoggerMiddleware
+from Helpers.Middlewares.response_logger_middleware import ResponseLoggerMiddleware
