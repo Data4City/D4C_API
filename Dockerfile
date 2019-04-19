@@ -15,5 +15,5 @@ RUN pip3 install wheel
 RUN pip3 install -r /app/requirements.txt
 
 
-CMD ["python3", "Resources/models.py"]
+CMD ["python3", "models.py"]
 CMD ["gunicorn", "-b", "0.0.0.0:80", "main:app"]
