@@ -3,3 +3,4 @@ gunicorn
 sqlalchemy
 jsonschema
 six
+pg8000
