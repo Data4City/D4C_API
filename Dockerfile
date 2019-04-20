@@ -7,7 +7,7 @@ FROM balenalib/rpi-raspbian:latest
 
 
 RUN apt-get update -y
-RUN apt-get install -y python3 python-pip-whl python3-pip python3-setuptools curl
+RUN apt-get install -y python3 python-pip-whl python3-pip python3-setuptools curl python-psycopg2
 RUN rm -rf /var/lib/apt/lists/*
 
 COPY ./app /app

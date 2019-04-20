@@ -3,4 +3,3 @@ gunicorn
 sqlalchemy
 jsonschema
 six
-psycopg2-binary
