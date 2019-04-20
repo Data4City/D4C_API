@@ -16,6 +16,7 @@ class ValueResource:
             raise falcon.HTTPBadRequest
 
     def on_post(self, req, resp):
+        print("WAT")
         try:
             kit_id = req.get_json("kit_id", dtype=int)
             if self.session.query(exists().where(Kit.id == kit_id)).scalar():
@@ -28,6 +29,7 @@ class ValueResource:
                 self.session.commit()
 
             resp.status = falcon.HTTP_201
+            resp.json = {"OK": "Saved successfully"}
         except falcon.HTTPBadRequest as err:
             resp.status = falcon.HTTP_400
             resp.json = {"error": err.description}
