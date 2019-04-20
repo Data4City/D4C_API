@@ -1,8 +1,9 @@
 #!/bin/bash
 
-FROM balenalib/rpi-raspbian:latest
+#FROM balenalib/rpi-raspbian:latest
 
-EXPOSE 80
+FROM python:3
+
 
 
 RUN apt-get update -y
