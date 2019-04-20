@@ -32,5 +32,5 @@ def get_env_variable(name) -> str:
 
 
 def create_db_connection_url():
-    return 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user=get_env_variable("POSTGRES_USER"), pw=get_env_variable("POSTGRES_PW"), url=get_env_variable("POSTGRES_URL"),
+    return 'postgresql+pg8000://{user}:{pw}@{url}/{db}'.format(user=get_env_variable("POSTGRES_USER"), pw=get_env_variable("POSTGRES_PW"), url=get_env_variable("POSTGRES_URL"),
                                                         db=get_env_variable("POSTGRES_DB"))
