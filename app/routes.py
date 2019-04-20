@@ -5,9 +5,10 @@ from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 
 from Helpers.Middlewares import SQLAlchemySessionManager, Jsonify, ResponseLoggerMiddleware
+from Helpers.helper_functions import create_db_connection_url
 from Resources import *
 
-engine = create_engine("sqlite:///sensor.db")#, echo=True)
+engine = create_engine(create_db_connection_url())
 
 session_factory = sessionmaker(bind=engine)
 Session = scoped_session(session_factory)

@@ -20,3 +20,17 @@ def filter_request(model, request: Dict) -> Dict:
             to_return[k] = v
 
     return to_return
+
+
+def get_env_variable(name) -> str:
+    import os
+    try:
+        return os.environ[name]
+    except KeyError:
+        message = "Expected environment variable '{}' not set.".format(name)
+        raise Exception(message)
+
+
+def create_db_connection_url():
+    return 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user=get_env_variable("POSTGRES_USER"), pw=get_env_variable("POSTGRES_PW"), url=get_env_variable("POSTGRES_URL"),
+                                                        db=get_env_variable("POSTGRES_DB"))
