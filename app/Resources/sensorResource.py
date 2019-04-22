@@ -16,7 +16,7 @@ class SensorResource:
             kit = get_or_create(self.session, Kit, id=kit_id)
 
             sensor.add_kit(kit, self.session)
-            resp.json = sensor.as_dict
+            resp.json = sensor.as_simple_dict
             resp.status = falcon.HTTP_201
 
         except falcon.HTTPBadRequest as err:

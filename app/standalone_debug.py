@@ -49,7 +49,7 @@ class StandaloneApplication(gunicorn.app.base.BaseApplication):
 
 if __name__ == '__main__':
     options = {
-        'bind': '%s:%s' % ('127.0.0.1', '8080'),
+        'bind': '%s:%s' % ('0.0.0.0', '8080'),
         'workers': number_of_workers(),
     }
     StandaloneApplication(get_app(), options).run()

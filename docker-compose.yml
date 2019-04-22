@@ -1,7 +1,8 @@
 version: "3"
+#TODO WORK on this shit
 services:
   db:
-    image: "postgres:11"
+    image: "redis"
     container_name: "postgres"
     ports:
       - "54320:5432"

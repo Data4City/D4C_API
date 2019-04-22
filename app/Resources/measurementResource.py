@@ -16,7 +16,7 @@ class MeasurementResource:
 
             measurement.add_sensor(sensor, self.session)
             resp.status = falcon.HTTP_201
-            resp.json = sensor.as_dict
+            resp.json = sensor.as_simple_dict
 
         except falcon.HTTPBadRequest as err:
             resp.status = falcon.HTTP_400

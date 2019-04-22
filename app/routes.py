@@ -17,7 +17,8 @@ Session = scoped_session(session_factory)
 def get_app() -> API:
     _app = falcon.API(middleware=[SQLAlchemySessionManager(Session), Jsonify.Middleware(help_messages=True), ResponseLoggerMiddleware()])
     _app.add_route('/v1/kit', KitResource())
-    _app.add_route('/v1/sensor', SensorResource())
-    _app.add_route('/v1/measurement', MeasurementResource())
-    _app.add_route('/v1/i2c', ValueResource())
+    _app.add_route('/v1/{kit_id:int}/kit', GeneralKitResource())
+    _app.add_route('/v1/{kit_id:int}/sensor', SensorResource())
+    _app.add_route('/v1/{kit_id:int}/measurement', MeasurementResource())
+    _app.add_route('/v1/{kit_id:int}/values', ValueResource)
     return _app
