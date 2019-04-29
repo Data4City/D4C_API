@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import create_engine, Table, Column, String, Integer, ForeignKey, DateTime, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
-
+from Helpers.helper_functions import create_db_connection_url
 Base = declarative_base()
 
 sensors_in_kit = Table('sensors_in_kit', Base.metadata,
@@ -14,6 +14,12 @@ measurements_in_sensor = Table('measurements_in_sensor', Base.metadata,
                                Column('sensor_id', Integer, ForeignKey('sensor.id')),
                                Column('measurement_id', Integer, ForeignKey('measurement.id')))
 
+values_from_sensor = Table('values_from_sensor', Base.metadata,
+                           Column('kit_id', Integer, ForeignKey('kit.id')),
+                           Column('sensor_id', Integer, ForeignKey('sensor.id')),
+                           Column('value_id', Integer, ForeignKey('value.id'))
+                           )
+
 
 class Kit(Base):
     __tablename__ = "kit"
@@ -22,7 +28,7 @@ class Kit(Base):
     serial = Column('serial', String(16))
     created_at = Column("timestamp", DateTime(timezone=True), default=datetime.now())
     sensors_used = relationship('Sensor', secondary=sensors_in_kit, backref=backref('kits', lazy='dynamic'))
-    values = relationship("Value", back_populates="kit")
+    values = relationship("Value", secondary=values_from_sensor)
 
     def __init__(self, serial):
         self.serial = serial
@@ -40,7 +46,7 @@ class Kit(Base):
     def as_simple_dict(self):
         return {
             'id': self.id,
-            'serial': self.serialS
+            'serial': self.serial
         }
 
     def save(self, session):
@@ -55,6 +61,7 @@ class Sensor(Base):
     model = Column("model", String(40), nullable=False)
     measurements = relationship('Measurement', secondary=measurements_in_sensor,
                                 backref=backref('sensors', lazy='dynamic'))
+    values = relationship("Value", secondary=values_from_sensor)
 
     @property
     def as_dict(self):
@@ -102,9 +109,10 @@ class Value(Base):
     id = Column('id', Integer, primary_key=True)
     data = Column("data", Float)
     timestamp = Column("timestamp", DateTime(timezone=True))
-    measurement_id = Column('measurement_id', Integer, ForeignKey('measurement.id'))
-    kit_id = Column('kit_id', Integer, ForeignKey('kit.id'))
-    kit = relationship("Kit", back_populates="values")
+    measurement_id = ('Measurement', Integer, ForeignKey('measurement.id'))
+
+    # kit_id = Column('kit_id', Integer, ForeignKey('kit.id'))
+    # kit = relationship("Kit", back_populates="values")
 
     def __init__(self, data, timestamp, kit, measurement):
         self.data = data
@@ -117,7 +125,7 @@ class Value(Base):
         return {
             'timestamp': self.timestamp,
             'data': self.data,
-            'symbol': self.measurement.symbol
+            'symbol': self.measurement_id.symbol
         }
 
     def save(self, session):
@@ -125,7 +133,7 @@ class Value(Base):
 
 
 def __reset_db__():
-    engine = create_engine("sqlite:///sensor.db", echo=True)
+    engine = create_engine(create_db_connection_url(), echo=True)
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
 

@@ -5,12 +5,10 @@ from models import Kit, Sensor
 
 
 class SensorResource:
-    def on_post(self, req, resp):
+    def on_post(self, req, resp, kit_id):
         try:
-
             name = req.get_json('name', dtype=str, max=40)
             model = req.get_json('model', dtype=str, max=40)
-            kit_id = req.get_json('kit_id', dtype=int)
 
             sensor = get_or_create(self.session, Sensor, name=name, model=model)
             kit = get_or_create(self.session, Kit, id=kit_id)
