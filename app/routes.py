@@ -21,4 +21,5 @@ def get_app() -> API:
     _app.add_route('/v1/{kit_id:int}/sensor', SensorResource())
     _app.add_route('/v1/{kit_id:int}/measurement', MeasurementResource())
     _app.add_route('/v1/{kit_id:int}/values', ValueResource)
+    _app.add_route('/debug', DebugResource)
     return _app
