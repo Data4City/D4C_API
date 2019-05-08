@@ -1,27 +1,25 @@
-version: "3"
-#TODO WORK on this shit
+version: "2"
+
 services:
   db:
-    image: "postgres"
-    container_name: "postgres"
+    image: postgres:latest
+    restart: always
     ports:
-      - "54320:5432"
+      - 5432:5432
     environment:
       POSTGRES_PASSWORD: 'postgres'
     volumes:
-      - my_dbdata:/var/lib/postgresql/data
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      POSTGRES_URL: "127.0.0.1:5432"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PW: "postgres"
-      POSTGRES_DB: "test"
-    expose:
-      - 80
-    ports:
-      - 80:8080
-volumes:
-  my_dbdata:
+      - ./var/lib/postgresql/data
+#  api:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    environment:
+#      POSTGRES_URL: "127.0.0.1:5432"
+#      POSTGRES_USER: "postgres"
+#      #POSTGRES_PW: "postgres"
+#      POSTGRES_DB: "test"
+#    expose:
+#      - 8080
+#    ports:
+#      - 8080:8080

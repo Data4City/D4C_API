@@ -1,8 +1,8 @@
 #!/bin/bash
 
-FROM balenalib/rpi-raspbian:latest
+#FROM balenalib/rpi-raspbian:latest
 
-#FROM python:3
+FROM python:3
 
 
 
@@ -16,4 +16,4 @@ RUN pip3 install wheel
 RUN pip3 install -r /app/requirements.txt
 
 
-CMD ["gunicorn", "-b", "0.0.0.0:80", "main:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "main:app"]

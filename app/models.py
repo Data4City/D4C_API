@@ -3,6 +3,8 @@ from datetime import datetime
 from sqlalchemy import create_engine, Table, Column, String, Integer, ForeignKey, DateTime, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
+from sqlalchemy_utils import database_exists, create_database
+
 from Helpers.helper_functions import create_db_connection_url
 Base = declarative_base()
 
@@ -134,6 +136,9 @@ class Value(Base):
 
 def __reset_db__():
     engine = create_engine(create_db_connection_url(), echo=True)
+    if not database_exists(engine.url):
+        create_database(engine.url)
+
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
 

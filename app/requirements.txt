@@ -4,3 +4,4 @@ sqlalchemy
 jsonschema
 six
 pg8000
+sqlalchemy_utils
