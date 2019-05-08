@@ -11,8 +11,8 @@ class MeasurementResource:
             symbol = req.get_json('symbol', dtype=str, max=10)
             name = req.get_json('name', dtype=str, max=30)
 
-            sensor = get_or_create(self.session, Sensor, id=sensor_id)
-            measurement = get_or_create(self.session, Measurement, symbol=symbol, name=name)
+            sensor, _ = get_or_create(self.session, Sensor, id=sensor_id)
+            measurement, _ = get_or_create(self.session, Measurement, symbol=symbol, name=name)
 
             measurement.add_sensor(sensor, self.session)
             resp.status = falcon.HTTP_201

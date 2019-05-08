@@ -10,8 +10,8 @@ class SensorResource:
             name = req.get_json('name', dtype=str, max=40)
             model = req.get_json('model', dtype=str, max=40)
 
-            sensor = get_or_create(self.session, Sensor, name=name, model=model)
-            kit = get_or_create(self.session, Kit, id=kit_id)
+            sensor, _ = get_or_create(self.session, Sensor, name=name, model=model)
+            kit, _ = get_or_create(self.session, Kit, id=kit_id)
 
             sensor.add_kit(kit, self.session)
             resp.json = sensor.as_simple_dict

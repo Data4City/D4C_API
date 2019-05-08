@@ -1,14 +1,15 @@
-import requests
-import os.path, time
 import json
+import os.path
+import time
 from datetime import datetime
 from typing import Dict
 
+import requests
+from Resources.generalKitResource import
 
-
-def create_box_cache(openSensePath) -> Dict:
-    r = requests.get(base_box_url).json()
-    with open(openSensePath, 'w') as outfile:
+def create_box_cache(open_sense_path) -> Dict:
+    r = requests.get(open_sense_path).json()
+    with open(open_sense_path, 'w') as outfile:
         json.dump(r, outfile, ensure_ascii=False)
     return r
 

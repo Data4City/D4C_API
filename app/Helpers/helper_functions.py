@@ -1,15 +1,16 @@
 from typing import Dict
 
 
+# Returns a boolean if the instance was created.
 def get_or_create(session, dbModel, **kwargs):
     instance = session.query(dbModel).filter_by(**kwargs).first()
     if instance:
-        return instance
+        return instance, False
     else:
         instance = dbModel(**kwargs)
         session.add(instance)
         session.commit()
-        return instance
+        return instance, True
 
 
 # Filters incoming put requests so only the necessary fields are considered
@@ -32,5 +33,7 @@ def get_env_variable(name) -> str:
 
 
 def create_db_connection_url():
-    return 'postgresql+pg8000://{user}:{pw}@{url}/{db}'.format(user=get_env_variable("POSTGRES_USER"), pw=get_env_variable("POSTGRES_PW"), url=get_env_variable("POSTGRES_URL"),
-                                                        db=get_env_variable("POSTGRES_DB"))
+    return 'postgresql+pg8000://{user}:{pw}@{url}/{db}'.format(user=get_env_variable("POSTGRES_USER"),
+                                                               pw=get_env_variable("POSTGRES_PW"),
+                                                               url=get_env_variable("POSTGRES_URL"),
+                                                               db=get_env_variable("POSTGRES_DB"))

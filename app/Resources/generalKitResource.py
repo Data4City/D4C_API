@@ -2,23 +2,19 @@ import falcon
 from sqlalchemy import exists
 
 from models import Kit
+from Helpers.helper_functions import get_or_create
 
 
 class KitResource:
-    def create_kit(self, serial):
-        b = Kit(serial)
-        b.save(self.session)
-        return b
 
     def on_post(self, req, resp):
         try:
             serial = req.get_json("serial", dtype=str)
-            kit = self.session.query(Kit).filter(Kit.serial == serial).first()
-            if kit:
+            kit, created = get_or_create(self.session, Kit, serial=serial)
+            resp.json = kit.as_simple_dict
+            if created:
                 resp.status = falcon.HTTP_200
-                resp.json = kit.as_simple_dict
             else:
-                self.create_kit(kit)
                 resp.status = falcon.HTTP_401
                 resp.json = kit.as_simple_dict
         except falcon.HTTPBadRequest:
@@ -29,7 +25,7 @@ class GeneralKitResource:
     def on_get(self, req, resp, kit_id):
         try:
             kit = self.session.query(Kit).get(kit_id)
-            if kit is not None:
+            if kit:
                 resp.status = falcon.HTTP_200
                 resp.json = kit.as_complete_dict
             else:
