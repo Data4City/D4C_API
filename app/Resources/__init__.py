@@ -2,4 +2,4 @@ from Resources.generalKitResource import GeneralKitResource, KitResource
 from Resources.measurementResource import MeasurementResource
 from Resources.sensorResource import SensorResource
 from Resources.valueResource import ValueResource
-from Resources.DebugResource import DebugResource
+from Resources.debugResource import DebugResource
