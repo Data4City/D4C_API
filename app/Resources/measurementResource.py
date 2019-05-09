@@ -5,10 +5,9 @@ from models import Measurement, Sensor
 
 
 class MeasurementResource:
-    def on_post(self, req, resp):
+    def on_post(self, req, resp, sensor_id):
         try:
-            sensor_id = req.get_json('sensor_id', dtype=int)
-            symbol = req.get_json('symbol', dtype=str, max=10)
+            symbol = req.get_json('symbol', dtype=str, max=40)
             name = req.get_json('name', dtype=str, max=30)
 
             sensor, _ = get_or_create(self.session, Sensor, id=sensor_id)
@@ -16,7 +15,7 @@ class MeasurementResource:
 
             measurement.add_sensor(sensor, self.session)
             resp.status = falcon.HTTP_201
-            resp.json = sensor.as_simple_dict
+            resp.json = measurement.as_simple_dict
 
         except falcon.HTTPBadRequest as err:
             resp.status = falcon.HTTP_400

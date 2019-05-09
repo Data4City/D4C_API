@@ -27,7 +27,7 @@ class Kit(Base):
     __tablename__ = "kit"
     # TODO Add geolocation
     id = Column('id', Integer, primary_key=True)
-    serial = Column('serial', String(16))
+    serial = Column('serial', String)
     created_at = Column("timestamp", DateTime(timezone=True), default=datetime.now())
     sensors_used = relationship('Sensor', secondary=sensors_in_kit, backref=backref('kits', lazy='dynamic'))
     values = relationship("Value", secondary=values_from_sensor)
@@ -71,7 +71,7 @@ class Sensor(Base):
             'id': self.id,
             'name': self.name,
             'model': self.model,
-            'measurements': [m.as_dict for m in self.measurements]
+            'measurements': [m.as_simple_dict for m in self.measurements]
         }
 
     def add_kit(self, kit, session):
@@ -90,7 +90,7 @@ class Measurement(Base):
     name = Column('name', String(30))
 
     @property
-    def as_dict(self):
+    def as_simple_dict(self):
         return {
             'symbol': self.symbol,
             'name': self.name,
@@ -127,7 +127,8 @@ class Value(Base):
         return {
             'timestamp': self.timestamp,
             'data': self.data,
-            'symbol': self.measurement_id.symbol
+            'symbol': self.measurement_id.symbol,
+            'id': self.id
         }
 
     def save(self, session):

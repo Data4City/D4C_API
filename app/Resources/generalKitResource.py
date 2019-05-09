@@ -1,8 +1,7 @@
 import falcon
-from sqlalchemy import exists
 
-from models import Kit
 from Helpers.helper_functions import get_or_create
+from models import Kit
 
 
 class KitResource:
@@ -13,10 +12,9 @@ class KitResource:
             kit, created = get_or_create(self.session, Kit, serial=serial)
             resp.json = kit.as_simple_dict
             if created:
-                resp.status = falcon.HTTP_200
+                resp.status = falcon.HTTP_201
             else:
-                resp.status = falcon.HTTP_401
-                resp.json = kit.as_simple_dict
+                resp.status = falcon.HTTP_200
         except falcon.HTTPBadRequest:
             resp.json = {'error': "Field 'serial' is required"}
 
