@@ -47,17 +47,17 @@ def crawl_and_save_to_api(box_cache: List):
                 if all(k in sensor for k in ("lastMeasurement", "_id", "boxes_id", "sensorType", "title")):
 
                     sense_req = requests.post(api_path + "/v1/{}/sensor".format(kit_id),
-                                             json={
-                                                 "name": sensor["title"],
-                                                 "model": sensor["sensorType"]
-                                             })
+                                              json={
+                                                  "name": sensor["title"],
+                                                  "model": sensor["sensorType"]
+                                              })
                     if sense_req.status_code == 201:
                         d_sensor = sense_req.json()
                         measure_req = requests.post(api_path + "/v1/measurement/{}".format(d_sensor["id"]),
-                                                      json={
-                                                          "name": sensor["title"],
-                                                          "symbol": sensor["unit"]}
-                                                      )
+                                                    json={
+                                                        "name": sensor["title"],
+                                                        "symbol": sensor["unit"]}
+                                                    )
 
                         if measure_req.status_code == 201:
                             d_measurement = measure_req.json()
