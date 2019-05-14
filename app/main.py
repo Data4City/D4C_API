@@ -11,11 +11,6 @@ import routes
 from Helpers.Middlewares import SQLAlchemySessionManager, Jsonify, ResponseLoggerMiddleware
 from Helpers.helper_functions import create_db_connection_url
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("mainapp."+__name__)
-#logger.addHandler(logging.FileHandler('api.log'))
-logger.setLevel(logging.INFO)
-
 
 def get_app() -> API:
     engine = create_engine(create_db_connection_url())
@@ -28,10 +23,14 @@ def get_app() -> API:
     _app = falcon.API(middleware=[SQLAlchemySessionManager(Session), Jsonify.Middleware(help_messages=True),
                                   ResponseLoggerMiddleware()])
 
-
     routes.add_routes(_app)
 
     return _app
 
+
+if __name__ != 'main':
+    FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    logging.basicConfig(level=logging.INFO, format=FORMAT)
+    logger = logging.getLogger("mainapp." + __name__)
 
 app = get_app()
