@@ -5,8 +5,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy_utils import database_exists, create_database
 from geoalchemy2.types import Geometry
-from shapely.geometry import Point
-from geoalchemy2.shape import from_shape
+from shapely.geometry import Point, mapping
+from geoalchemy2.shape import from_shape, to_shape
 from Helpers.helper_functions import create_db_connection_url
 
 Base = declarative_base()
@@ -37,12 +37,12 @@ class Kit(Base):
     sensors_used = relationship('Sensor', secondary=sensors_in_kit, backref=backref('kits', lazy='dynamic'))
     values = relationship("Value", secondary=values_from_sensor)
 
-    def __init__(self, serial, lat=None, long=None):
+    def __init__(self, serial):
         self.serial = serial
 
-
     def set_location(self, lat, long):
-        self.location = from_shape(Point(long, lat))
+        p = Point(long, lat)
+        self.geom = from_shape(p, srid=4326)
 
     @property
     def as_complete_dict(self):
@@ -51,14 +51,23 @@ class Kit(Base):
             'serial': self.serial,
             'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S'),
             'sensors_used': [s.as_dict for s in self.sensors_used]
+            'location': self.get_position()
         }
 
     @property
     def as_simple_dict(self):
         return {
             'id': self.id,
-            'serial': self.serial
+            'serial': self.serial,
+            'location': self.get_position()
+
         }
+
+    def get_position(self):
+        try:
+            return mapping(to_shape(self.geom))
+        except Exception:
+            return {}
 
     def save(self, session):
         session.add(self)
