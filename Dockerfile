@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#FROM balenalib/rpi-raspbian:latest
+FROM balenalib/rpi-raspbian:latest
 
-FROM python:3
+#FROM python:3
 
 
 
