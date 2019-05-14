@@ -72,7 +72,7 @@ def crawl_and_save_to_api(box_cache: List):
 
 
 def crawl_results():
-    open_sense_path: str = 'openSenseCache.json'
+    open_sense_path = 'openSenseCache.json'
     if os.path.exists(open_sense_path):
         box_cache = {}
         if (datetime.now() - datetime.strptime(time.ctime(os.path.getmtime(open_sense_path)),
