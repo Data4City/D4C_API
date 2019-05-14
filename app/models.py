@@ -50,7 +50,7 @@ class Kit(Base):
             'id': self.id,
             'serial': self.serial,
             'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-            'sensors_used': [s.as_dict for s in self.sensors_used]
+            'sensors_used': [s.as_dict for s in self.sensors_used],
             'location': self.get_position()
         }
 
