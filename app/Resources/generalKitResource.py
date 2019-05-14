@@ -18,6 +18,17 @@ class KitResource:
         except falcon.HTTPBadRequest:
             resp.json = {'error': "Field 'serial' is required"}
 
+    def on_get(self, req, resp):
+        amount = 10
+        try:
+            amount = int(req.params.get("amount", 10))
+        except ValueError:
+            amount = amount
+
+        results = self.session.query(Kit).limit(amount).all()
+        resp.json = [k.as_simple_dict for k in results]
+        resp.status = falcon.HTTP_200
+
 
 class GeneralKitResource:
     def on_get(self, req, resp, kit_id):
