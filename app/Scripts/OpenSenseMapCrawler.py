@@ -37,7 +37,6 @@ def get_sensor_values(sensor: Dict[str, str], last_measurement) -> Generator[Dic
 def crawl_and_save_to_api(box_cache: List):
     api_path = "http://localhost:8080"
     for box_json in get_osm_box_info(box_cache):
-        print(box_json)
         sensors = box_json.get("sensors", [])
         osm_serial = "osm_" + box_json["_id"]
         d_kit = requests.post(api_path + "/v1/kit", json={"serial": osm_serial}).json()

@@ -28,9 +28,10 @@ def get_app() -> API:
     return _app
 
 
-if __name__ != 'main':
-    FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO, format=FORMAT)
-    logger = logging.getLogger("mainapp." + __name__)
-
+FORMAT = '%(asctime)s - %(levelname)s - %(message)s'
+logging.basicConfig(level=logging.INFO, format=FORMAT)
+logger = logging.getLogger("mainapp." + __name__)
+gunicorn_logger = logging.getLogger('gunicorn.error')
+logger.handlers = gunicorn_logger.handlers
+logger.setLevel(gunicorn_logger.level)
 app = get_app()
