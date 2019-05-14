@@ -4,8 +4,11 @@ from sqlalchemy import create_engine, Table, Column, String, Integer, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy_utils import database_exists, create_database
-
+from geoalchemy2.types import Geometry
+from shapely.geometry import Point
+from geoalchemy2.shape import from_shape
 from Helpers.helper_functions import create_db_connection_url
+
 Base = declarative_base()
 
 sensors_in_kit = Table('sensors_in_kit', Base.metadata,
@@ -25,15 +28,21 @@ values_from_sensor = Table('values_from_sensor', Base.metadata,
 
 class Kit(Base):
     __tablename__ = "kit"
-    # TODO Add geolocation
+
     id = Column('id', Integer, primary_key=True)
     serial = Column('serial', String)
     created_at = Column("timestamp", DateTime(timezone=True), default=datetime.now())
+    geom = Column(Geometry(geometry_type='POINT', srid=4326))
+
     sensors_used = relationship('Sensor', secondary=sensors_in_kit, backref=backref('kits', lazy='dynamic'))
     values = relationship("Value", secondary=values_from_sensor)
 
-    def __init__(self, serial):
+    def __init__(self, serial, lat=None, long=None):
         self.serial = serial
+
+
+    def set_location(self, lat, long):
+        self.location = from_shape(Point(long, lat))
 
     @property
     def as_complete_dict(self):

@@ -7,4 +7,4 @@ class ResponseLoggerMiddleware:
         self.logger.info("Logging started")
 
     def process_request(self, req, resp):
-        self.logger.info('{0} {1} {2} {3}'.format(req.method, req.relative_uri, resp.status, req.query_string))
+        self.logger.info('{0} {1} {2} {3}'.format(req.method, req.relative_uri, resp.status, req.json))

@@ -1,8 +1,10 @@
 falcon
 gunicorn
-sqlalchemy
+sqlalchemy >= 0.9
+geoalchemy2
+shapely
 jsonschema
 six
-pg8000
+psycopg2-binary
 sqlalchemy_utils
 requests

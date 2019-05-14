@@ -2,7 +2,7 @@ import json
 import os.path
 import time
 from datetime import datetime
-from typing import Dict, Generator, List
+from typing import Dict, Generator, List, Tuple
 
 import requests
 
@@ -34,12 +34,21 @@ def get_sensor_values(sensor: Dict[str, str], last_measurement) -> Generator[Dic
         yield measurement
 
 
+def get_location(box_json) -> Tuple[float, float]:
+    try:
+        return box_json["loc"][0]["geometry"]["coordinates"]
+    except Exception:
+        return None, None
+
+
 def crawl_and_save_to_api(box_cache: List):
     api_path = "http://localhost:8080"
     for box_json in get_osm_box_info(box_cache):
         sensors = box_json.get("sensors", [])
         osm_serial = "osm_" + box_json["_id"]
-        d_kit = requests.post(api_path + "/v1/kit", json={"serial": osm_serial}).json()
+        check = long, lat = get_location(box_json)
+        body = {"serial": osm_serial, "lat": lat, "long": long} if check else {"serial": osm_serial}
+        d_kit = requests.post(api_path + "/v1/kit", json=body).json()
         kit_id = d_kit["id"]
         if sensors:
             for sensor in sensors:
