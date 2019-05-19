@@ -8,7 +8,7 @@ FROM python:3
 
 RUN apt-get update -y
 RUN apt-get install -y python3 python-pip-whl python3-pip python3-setuptools curl
-RUN apt-get -y install libgeos-c1
+RUN apt-get -y install libgeos-c1v5
 RUN apt-get -y install libgeos-dev
 
 
