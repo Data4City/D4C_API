@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import relationship, backref
 
-from manyToManyRelationships import values_from_sensor, measurements_in_sensor
+from Models.manyToManyRelationships import values_from_sensor, measurements_in_sensor
 from Models import Base
 
 class Sensor(Base):

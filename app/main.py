@@ -12,6 +12,7 @@ from Helpers.Middlewares import SQLAlchemySessionManager, Jsonify, ResponseLogge
 from Helpers.helper_functions import create_db_connection_url
 
 
+
 def get_app() -> API:
     engine = create_engine(create_db_connection_url())
     if not database_exists(engine.url):

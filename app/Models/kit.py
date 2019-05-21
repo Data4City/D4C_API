@@ -5,9 +5,8 @@ from geoalchemy2.types import Geometry
 from shapely.geometry import Point, mapping
 from sqlalchemy import Column, String, Integer, DateTime
 from sqlalchemy.orm import relationship, backref
-from manyToManyRelationships import values_from_sensor, sensors_in_kit
+from Models.manyToManyRelationships import values_from_sensor, sensors_in_kit
 from Models import Base
-
 class Kit(Base):
     __tablename__ = "kit"
 
