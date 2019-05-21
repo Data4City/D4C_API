@@ -1,7 +1,6 @@
 from sqlalchemy import Column, String, Integer
 
-from . import Base
-
+from Models import Base
 
 class Measurement(Base):
     __tablename__ = "measurement"

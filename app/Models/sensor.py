@@ -1,9 +1,8 @@
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import relationship, backref
 
-from . import Base
 from manyToManyRelationships import values_from_sensor, measurements_in_sensor
-
+from Models import Base
 
 class Sensor(Base):
     __tablename__ = "sensor"

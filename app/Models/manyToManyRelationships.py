@@ -1,8 +1,7 @@
 
 from sqlalchemy import Table, Column, Integer, ForeignKey
 
-from . import Base
-
+from Models import Base
 sensors_in_kit = Table('sensors_in_kit', Base.metadata,
                        Column('kit_id', Integer, ForeignKey('kit.id')),
                        Column('sensor_id', Integer, ForeignKey('sensor.id')))

@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey, DateTime, Float
-from . import Base
-
+from Models import Base
 
 class Value(Base):
     __tablename__ = "value"
