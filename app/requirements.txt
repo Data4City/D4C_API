@@ -6,6 +6,6 @@ shapely
 jsonschema
 six
 pyGeoTile
-psycopg2-binary
 sqlalchemy_utils
 requests
+psycopg2cffi
