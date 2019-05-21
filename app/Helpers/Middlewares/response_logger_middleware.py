@@ -1,6 +1,7 @@
 import logging
 import falcon
 
+
 class ResponseLoggerMiddleware:
     def __init__(self):
         self.logger = logging.getLogger(__name__)

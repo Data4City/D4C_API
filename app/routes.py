@@ -3,6 +3,7 @@ from Resources import *
 
 def add_routes(_app):
     _app.add_route('/v1/kit', KitResource())
+    _app.add_route('/v1/geo/{z:int}/{x:int}/{y:int}', GeoResource())
     _app.add_route('/v1/{kit_id:int}/kit', GeneralKitResource())
     _app.add_route('/v1/{kit_id:int}/sensor', SensorResource())
     _app.add_route('/v1/measurement/{sensor_id:int}', MeasurementResource())

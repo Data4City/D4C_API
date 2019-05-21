@@ -59,7 +59,6 @@ class Kit(Base):
         return {
             'id': self.id,
             'serial': self.serial,
-            'location': self.get_position()
 
         }
 
