@@ -54,14 +54,14 @@ def crawl_and_save_to_api(box_cache: List):
             for sensor in sensors:
                 if all(k in sensor for k in ("lastMeasurement", "_id", "boxes_id", "sensorType", "title")):
 
-                    sense_req = requests.post(api_path + "/v1/{}/sensor".format(kit_id),
+                    sense_req = requests.post(api_path + "/v1/kit/{kit_id}/sensor".format(kit_id=kit_id),
                                               json={
                                                   "name": sensor["title"],
                                                   "model": sensor["sensorType"]
                                               })
                     if sense_req.status_code == 201:
                         d_sensor = sense_req.json()
-                        measure_req = requests.post(api_path + "/v1/measurement/{}".format(d_sensor["id"]),
+                        measure_req = requests.post(api_path + "/v1/kit/{kit_id}/sensor/{sensor_id}/measurement".format(sensor_id=d_sensor["id"], kit_id=kit_id),
                                                     json={
                                                         "name": sensor["title"],
                                                         "symbol": sensor["unit"]}
@@ -72,7 +72,8 @@ def crawl_and_save_to_api(box_cache: List):
                             last_measurement = sensor.get('lastMeasurement', {})
                             if 'createdAt' in last_measurement:
                                 for value in get_sensor_values(sensor, last_measurement):
-                                    requests.post(api_path + "/v1/{}/{}/value".format(kit_id, d_measurement["id"]),
+                                    requests.post(api_path + "/v1/kit/{kit_id}/measurement/{measurement_id}".format(
+                                        kit_id=kit_id, measurement_id=d_measurement["id"]),
                                                   json={
                                                       "data": value['value'],
                                                       "timestamp": value['createdAt']}
