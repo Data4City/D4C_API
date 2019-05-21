@@ -15,7 +15,7 @@ from Helpers.helper_functions import create_db_connection_url
 def get_app() -> API:
     engine = create_engine(create_db_connection_url())
     if not database_exists(engine.url):
-        from models import Base
+        from Models import Base
         logger.info("Creating database")
         create_database(engine.url)
         Base.metadata.create_all(bind=engine)

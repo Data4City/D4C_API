@@ -4,7 +4,7 @@ import falcon
 from falcon import testing
 
 from routes import get_app
-import models
+
 
 class MyTestCase(testing.TestCase):
     def setUp(self):

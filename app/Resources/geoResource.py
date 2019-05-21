@@ -1,9 +1,6 @@
 from pygeotile.tile import Tile
-from sqlalchemy import func
-from shapely.geometry import box, mapping
+from shapely.geometry import box
 from geoalchemy2.shape import from_shape
-
-from models import Kit
 
 
 class GeoResource:

@@ -1,8 +1,7 @@
 import falcon
 
 from Helpers.helper_functions import *
-from models import Measurement, Sensor
-
+from Models import Measurement, Sensor
 
 class MeasurementResource:
     def on_post(self, req, resp, sensor_id):
