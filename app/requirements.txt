@@ -9,3 +9,4 @@ pyGeoTile
 sqlalchemy_utils
 requests
 psycopg2cffi
+FuturesSession
