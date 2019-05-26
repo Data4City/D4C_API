@@ -18,4 +18,4 @@ WORKDIR /app
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 
-CMD ["gunicorn", "-b", "0.0.0.0:8080", "main:app"]
+CMD ["pypy3", "standalone_debug.py"]
