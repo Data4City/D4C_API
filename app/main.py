@@ -8,7 +8,6 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import create_database, database_exists
 
 import routes
-from EvictQueue import EvictQueue
 from Helpers.Middlewares import SQLAlchemySessionManager, Jsonify, ResponseLoggerMiddleware
 from Helpers.helper_functions import create_db_connection_url
 
@@ -39,6 +38,7 @@ def speed_up_logs():
     logging.basicConfig(level=logging.INFO, format=FORMAT)
     rootLogger = logging.getLogger("mainapp." + __name__)
 
+    from Helpers.EvictQueue import EvictQueue
     log_que = EvictQueue(1000)
     queue_handler = QueueHandler(log_que)
     queue_listener =QueueListener(log_que, *rootLogger.handlers)
