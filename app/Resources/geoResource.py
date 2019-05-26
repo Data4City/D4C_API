@@ -2,6 +2,8 @@ from pygeotile.tile import Tile
 from shapely.geometry import box
 from geoalchemy2.shape import from_shape
 
+from Models import Kit
+
 
 class GeoResource:
     @classmethod
@@ -25,7 +27,8 @@ class GeoResource:
         sensor_tile = Tile.from_google(x, y, z)
         nw, se = sensor_tile.bounds
         tile_bounds = from_shape(box(nw.longitude, se.latitude, se.longitude, nw.latitude))
-        # print(tile_bounds)
-        # kits = self.session.query(Kit).filter(Kit.geom && tile_bounds)
-        # #print(kits.query(func.count(Kit.id)))
-        # resp.json = self.as_geojson(kits)
+        print(tile_bounds)
+        kits = self.session.query(Kit).filter(
+            tile_bounds.ST_INTERSECTS(Kit.geom))
+        print(kits.query(func.count(Kit.id)))
+        resp.json = self.as_geojson(kits)

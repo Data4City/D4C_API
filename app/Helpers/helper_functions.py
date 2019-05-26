@@ -13,6 +13,11 @@ def get_or_create(session, dbModel, **kwargs):
         return instance, True
 
 
+def res_to_json(res_object):
+    to_return = {}
+    for idx, val in enumerate(res_object._fields):
+        to_return[val] = res_object[idx]
+    return to_return
 # Filters incoming put requests so only the necessary fields are considered
 def filter_request(model, request: Dict) -> Dict:
     to_return = {}

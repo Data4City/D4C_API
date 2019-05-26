@@ -8,16 +8,16 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import create_database, database_exists
 
 import routes
+from EvictQueue import EvictQueue
 from Helpers.Middlewares import SQLAlchemySessionManager, Jsonify, ResponseLoggerMiddleware
 from Helpers.helper_functions import create_db_connection_url
-
 
 
 def get_app() -> API:
     engine = create_engine(create_db_connection_url())
     if not database_exists(engine.url):
         from Models import Base
-        logger.info("Creating database")
+        logging.getLogger("mainapp." + __name__).info("Creating database")
         create_database(engine.url)
         Base.metadata.create_all(bind=engine)
 
@@ -32,10 +32,21 @@ def get_app() -> API:
     return _app
 
 
-FORMAT = '%(asctime)s - %(levelname)s - %(message)s'
-logging.basicConfig(level=logging.INFO, format=FORMAT)
-logger = logging.getLogger("mainapp." + __name__)
-gunicorn_logger = logging.getLogger('gunicorn.error')
-logger.handlers = gunicorn_logger.handlers
-logger.setLevel(gunicorn_logger.level)
+def speed_up_logs():
+    from logging.handlers import QueueHandler, QueueListener
+
+    FORMAT = '%(asctime)s - %(levelname)s - %(message)s'
+    logging.basicConfig(level=logging.INFO, format=FORMAT)
+    rootLogger = logging.getLogger("mainapp." + __name__)
+
+    log_que = EvictQueue(1000)
+    queue_handler = QueueHandler(log_que)
+    queue_listener =QueueListener(log_que, *rootLogger.handlers)
+    queue_listener.start()
+
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    rootLogger.setLevel(gunicorn_logger.level)
+    rootLogger.handlers = [queue_handler, gunicorn_logger.handlers]
+
+speed_up_logs()
 app = get_app()
