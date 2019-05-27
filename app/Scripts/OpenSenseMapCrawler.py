@@ -7,6 +7,7 @@ from typing import Dict, Generator, List, Tuple
 from requests_futures.sessions import FuturesSession
 
 import requests
+import re
 
 api_path = "http://localhost:8080"
 args = None
@@ -44,20 +45,24 @@ def get_location(box_json) -> Tuple[float, float]:
     try:
         return box_json["loc"][0]["geometry"]["coordinates"]
     except Exception:
+        print("Error at get locatio")
         return None, None
 
 
 def crawl_and_save_to_api(box_cache: List):
     future_sensor_list = []
-
+    i = 0
     for box_json in get_osm_box_info(box_cache):
         try:
+            if i == 2: break
+            i += 1
             sensors = box_json.get("sensors", [])
             osm_serial = "osm_" + box_json["_id"]
             check = long, lat = get_location(box_json)
             body = {"serial": osm_serial, "lat": lat, "long": long} if check else {"serial": osm_serial}
             future_sensor_list.append((session.post(api_path + "/v1/kit", json=body), sensors))
-        except Exception:
+        except Exception as e:
+            print(e)
             continue
 
     if bool(args.sensors):
@@ -67,6 +72,7 @@ def crawl_and_save_to_api(box_cache: List):
                 try:
                     post_sensors(kit_id, sensors_in_kit)
                 except Exception:
+                    print("Sensor error")
                     continue
 
 
@@ -74,30 +80,32 @@ def post_values(kit_id, measurement_id, values):
     for value in values:
         try:
             if measurement_id and kit_id:
+                timestamp = re.sub('[ZT]', ' ', value['createdAt'])
+
                 session.post(api_path + "/v1/kit/{kit_id}/measurement/{measurement_id}".format(
                     kit_id=kit_id, measurement_id=measurement_id),
-                              json={
-                                  "data": value['value'],
-                                  "timestamp": value['createdAt']}
-                              )
-        except Exception:
+                             json={
+                                 "data": value['value'],
+                                 "timestamp": timestamp}
+                             )
+
+        except Exception as e:
+            print(e)
             continue
 
 
-def post_sensors(kit_id, sensors):
+def post_sensors(kit_id, sensor):
     future_sensor_list = []
-    for sensor in sensors:
-        try:
-            if all(k in sensor for k in ("lastMeasurement", "_id", "boxes_id", "sensorType", "title")):
+    try:
+        if all(k in sensor for k in ("lastMeasurement", "_id", "boxes_id", "sensorType", "title")):
+            future_sensor_list.append(session.post(api_path + "/v1/kit/{kit_id}/sensor".format(kit_id=kit_id),
+                                                   json={
+                                                       "name": sensor["title"],
+                                                       "model": sensor["sensorType"]
+                                                   }))
 
-                future_sensor_list.append(session.post(api_path + "/v1/kit/{kit_id}/sensor".format(kit_id=kit_id),
-                                          json={
-                                              "name": sensor["title"],
-                                              "model": sensor["sensorType"]
-                                          }))
-
-        except Exception:
-            continue
+    except Exception as e:
+        print(e)
 
     future_measurements_list = []
     for sensor_result in future_sensor_list:
@@ -105,9 +113,9 @@ def post_sensors(kit_id, sensors):
         if sense_req.status_code == 201:
             d_sensor = sense_req.json()
             future_measurements_list.append(session.post(
-                api_path + "/v1/kit/{kit_id}/sensor/{sensor_id}/measurement".format(sensor_id=d_sensor["id"],
-                                                                                    kit_id=kit_id),
+                api_path + "/v1/sensor/{sensor_id}/measurement".format(sensor_id=d_sensor["id"]),
                 json={
+                    "kit_id": kit_id,
                     "name": sensor["title"],
                     "symbol": sensor["unit"]}
             ))

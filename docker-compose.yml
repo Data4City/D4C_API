@@ -1,6 +1,13 @@
 version: "2"
 
 services:
+  pgadmin4:
+    image: dpage/pgadmin4
+    ports:
+      - 80:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgres
+      PGADMIN_DEFAULT_PASSWORD: postgres
   db:
     image: kartoza/postgis:9.6-2.4
     restart: unless-stopped

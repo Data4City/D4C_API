@@ -8,7 +8,11 @@ def add_routes(_app):
     _app.add_route('/v1/kit', KitResource())
     _app.add_route('/v1/kit/{kit_id:int}', GeneralKitResource())
     _app.add_route('/v1/kit/{kit_id:int}/sensor', SensorResource())
-    _app.add_route('/v1/sensor/{sensor_id:int}/measurement', MeasurementResource())
     _app.add_route('/v1/kit/{kit_id:int}/measurement/{measurement_id:int}', ValueResource())
+
+    _app.add_route('/v1/sensor/', SensorResource())
+    _app.add_route('/v1/sensor/{sensor_id:int}/measurement', MeasurementResource())
+
     _app.add_route('/v1/geo/{z:float}/{x:float}/{y:float}', GeoResource())
+
     _app.add_route('/debug', DebugResource())
