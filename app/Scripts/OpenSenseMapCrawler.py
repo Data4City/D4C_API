@@ -46,7 +46,7 @@ def get_location(box_json) -> Tuple[float, float]:
         return box_json["loc"][0]["geometry"]["coordinates"]
     except Exception:
         print("Error at get locatio")
-        return None, None
+        return None
 
 
 def crawl_and_save_to_api(box_cache: List):
@@ -55,8 +55,12 @@ def crawl_and_save_to_api(box_cache: List):
         try:
             sensors = box_json.get("sensors", [])
             osm_serial = "osm_" + box_json["_id"]
-            check = long, lat = get_location(box_json)
-            body = {"serial": osm_serial, "lat": lat, "long": long} if check else {"serial": osm_serial}
+            check = get_location(box_json)
+            if check and len(check) == 2:
+                lat, long = check
+                body = {"serial": osm_serial, "lat": lat, "long": long}
+            else:
+                body = {"serial": osm_serial}
             future_sensor_list.append((session.post(api_path + "/v1/kit", json=body), sensors))
         except Exception as e:
             print(e)
