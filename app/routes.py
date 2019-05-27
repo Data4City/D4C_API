@@ -1,7 +1,8 @@
 from Resources import *
 
+
 def add_routes(_app):
-    from converters import FloatConverter
+    from Helpers.converters import FloatConverter
 
     _app.router_options.converters['float'] = FloatConverter
 

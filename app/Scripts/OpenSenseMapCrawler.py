@@ -8,7 +8,7 @@ from requests_futures.sessions import FuturesSession
 
 import requests
 import re
-
+from datetime import datetime
 api_path = "http://localhost:8080"
 args = None
 session = FuturesSession(max_workers=20)
@@ -51,11 +51,8 @@ def get_location(box_json) -> Tuple[float, float]:
 
 def crawl_and_save_to_api(box_cache: List):
     future_sensor_list = []
-    i = 0
     for box_json in get_osm_box_info(box_cache):
         try:
-            if i == 2: break
-            i += 1
             sensors = box_json.get("sensors", [])
             osm_serial = "osm_" + box_json["_id"]
             check = long, lat = get_location(box_json)
@@ -147,8 +144,11 @@ def crawl_results():
 
 
 if __name__ == '__main__':
+    start = datetime.now()
     parser = argparse.ArgumentParser(description="Which options should be saved")
     parser.add_argument("--sensors", metavar='-s', help="Save sensors?", default=True)
     parser.add_argument("--values", metavar='-v', help="Save values?", default=True)
     args = parser.parse_args()
     crawl_results()
+    end = datetime.now()
+    print("Crawled the api in {}".format(str((end-start).min)))
