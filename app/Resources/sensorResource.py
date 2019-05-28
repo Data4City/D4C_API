@@ -21,7 +21,7 @@ class SensorResource:
             resp.status = falcon.HTTP_400
             resp.json = {'error': err.description}
 
-    def on_post(self, req, resp, kit_id):
+    def on_post_with_kit(self, req, resp, kit_id):
         try:
 
             kit, k_created = get_or_create(self.session, Kit, id=kit_id)
