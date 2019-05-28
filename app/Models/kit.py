@@ -21,7 +21,7 @@ class Kit(Base):
     def __init__(self, serial):
         self.serial = serial
 
-    def set_location(self, lat, long):
+    def set_location(self, long, lat):
         p = Point(long, lat)
         self.geom = from_shape(p, srid=4326)
 
