@@ -1,4 +1,4 @@
-from Resources.generalKitResource import GeneralKitResource, KitResource
+from Resources.generalKitResource import KitResource
 from Resources.measurementResource import MeasurementResource
 from Resources.sensorResource import SensorResource
 from Resources.valueResource import ValueResource

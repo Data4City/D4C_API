@@ -7,7 +7,7 @@ def add_routes(_app):
     _app.router_options.converters['float'] = FloatConverter
 
     _app.add_route('/v1/kit', KitResource())
-    _app.add_route('/v1/kit/{kit_id:int}', GeneralKitResource())
+    _app.add_route('/v1/kit/{kit_id:int}', KitResource(), suffix="single")
     _app.add_route('/v1/kit/{kit_id:int}/sensor', SensorResource())
     _app.add_route('/v1/kit/{kit_id:int}/measurement/{measurement_id:int}', ValueResource())
 
