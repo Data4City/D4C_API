@@ -1,3 +1,4 @@
+import falcon
 from pygeotile.tile import Tile
 from shapely.geometry import box, mapping
 from geoalchemy2.shape import from_shape
@@ -8,9 +9,9 @@ from Models import Kit
 import json
 class GeoResource:
     @classmethod
-    def as_geojson(self, mother):
+    def as_geojson(self, geo_tuples):
         features = []
-        for id, geo in mother:
+        for id, geo in geo_tuples:
             features.append({
                 "type": "Feature",
                 "properties": {"kit_id": id},
@@ -25,25 +26,15 @@ class GeoResource:
         }
 
     def on_get(self, req, resp, z, x, y):
-        sensor_tile = Tile.from_google(x, y, z)
-        print(sensor_tile)
-        nw, se = sensor_tile.bounds
-        tile_bounds = box(nw.latitude, se.longitude, se.latitude, nw.longitude)
+        try:
+            sensor_tile = Tile.from_google(x, y, z)
+            nw, se = sensor_tile.bounds
+            tile_bounds = box(nw.latitude, se.longitude, se.latitude, nw.longitude)
 
-        print(mapping(tile_bounds))
-        tile_bounds = from_shape(tile_bounds)
-        print(nw)
-        print(se)
-        geo = self.session.query(Kit.id, Kit.geom).filter(
-            Kit.geom.ST_Intersects(tile_bounds))
-        # print(kits.query(func.count(Kit.id)))
-        ass = self.session.query(Kit.id, Kit.geom).filter(
-            func.ST_Contains(Kit.geom, tile_bounds)
-        )
-        print(geo)
-        print(geo.all())
-        print(ass)
-        print(ass.all())
+            tile_bounds = from_shape(tile_bounds)
+            geo = self.session.query(Kit.id, func.ST_AsGeoJson(Kit.geom)).filter(func.ST_Contains(tile_bounds,Kit.geom)).all()
 
-      #  ks= self.session.query(Kit.id,func.ST_AsGeoJSON(Kit.geom)).filter(func.ST_Distance_Sphere(Kit.geom, tile_bounds) < 500000000).all()
-       # resp.json = self.as_geojson(ks)
+            resp.json = self.as_geojson(geo)
+            resp.status = falcon.HTTP_200
+        except Exception:
+            resp.status = falcon.HTTP_500

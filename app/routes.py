@@ -10,7 +10,7 @@ def add_routes(_app):
     _app.add_route('/v1/kit/{kit_id:int}', KitResource(), suffix="single")
 
     _app.add_route('/v1/sensor/', SensorResource())
-    _app.add_route('/v1/kit/{kit_id:int}/sensor', SensorResource(),suffix="with_kit")
+    _app.add_route('/v1/kit/{kit_id:int}/sensor', SensorResource(), suffix="with_kit")
 
     _app.add_route('/v1/kit/{kit_id:int}/measurement/{measurement_id:int}', ValueResource())
 

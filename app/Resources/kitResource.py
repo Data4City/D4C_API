@@ -1,6 +1,7 @@
 import falcon
 
 from Models import Kit
+from helper_functions import get_or_create
 
 
 class KitResource:
@@ -30,16 +31,14 @@ class KitResource:
     def on_post(self, req, resp):
         try:
             serial = req.get_json("serial", dtype=str)
-            kit = self.session.query(Kit).filter(Kit.serial == serial).one_or_none()
-            if not kit:
+            kit, created = get_or_create(self.session, Kit, serial=serial)
+            if not created:
                 resp.status = falcon.HTTP_201
-
-                kit = Kit(serial)
 
                 if all([el in req.json for el in ["long", "lat"]]):
                     kit.set_location(req.get_json("long"), req.get_json("lat"))
+                    kit.save(self.session)
 
-                kit.save(self.session)
             else:
                 resp.status = falcon.HTTP_200
 

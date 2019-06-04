@@ -43,7 +43,8 @@ def get_sensor_values(sensor: Dict[str, str], last_measurement) -> Generator[Dic
 
 def get_location(box_json) -> Tuple[float, float]:
     try:
-        return box_json["loc"][0]["geometry"]["coordinates"]
+        coords = box_json["loc"][0]["geometry"]["coordinates"]
+        return coords
     except Exception:
         print("Error at get locatio")
         return None
@@ -51,21 +52,30 @@ def get_location(box_json) -> Tuple[float, float]:
 
 def crawl_and_save_to_api(box_cache: List):
     future_sensor_list = []
+    total = 0
     for box_json in get_osm_box_info(box_cache):
         try:
             sensors = box_json.get("sensors", [])
             osm_serial = "osm_" + box_json["_id"]
             check = get_location(box_json)
-            if check and len(check) == 2:
-                lat, long = check
+            if check and len(check) >= 2:
+                if len(check) == 2:
+                    long, lat = check
+                elif len(check) == 3:
+                    long, lat, _ = check
+
                 body = {"serial": osm_serial, "lat": lat, "long": long}
             else:
+                total += 1
                 body = {"serial": osm_serial}
+                print(check)
             future_sensor_list.append((session.post(api_path + "/v1/kit", json=body), sensors))
         except Exception as e:
+            total += 1
             print(e)
             continue
 
+    print("Finished saving kits with {} and {} errors".format(len(future_sensor_list), total))
     if bool(args.sensors):
         for kit_future, sensor_list in future_sensor_list:
             kit_id = kit_future.result().json()["id"]
@@ -150,8 +160,8 @@ def crawl_results():
 if __name__ == '__main__':
     start = datetime.now()
     parser = argparse.ArgumentParser(description="Which options should be saved")
-    parser.add_argument("--sensors", metavar='-s', help="Save sensors?", default=True)
-    parser.add_argument("--values", metavar='-v', help="Save values?", default=True)
+    parser.add_argument("--sensors", metavar='-s', help="Save sensors?", default=False)
+    parser.add_argument("--values", metavar='-v', help="Save values?", default=False)
     args = parser.parse_args()
     crawl_results()
     end = datetime.now()
