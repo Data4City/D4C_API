@@ -27,7 +27,7 @@ class Kit(Base):
     @property
     def as_complete_dict(self):
         return {
-            'id': self.id,
+            'kit_id': self.id,
             'serial': self.serial,
             'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S'),
             'location': self.get_position()
@@ -36,7 +36,7 @@ class Kit(Base):
     @property
     def as_simple_dict(self):
         return {
-            'id': self.id,
+            'kit_id': self.id,
             'serial': self.serial,
             'location': self.get_position()
         }
