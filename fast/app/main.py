@@ -3,6 +3,7 @@ from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
+from sqlalchemy_utils import create_database, database_exists
 
 from app.api.api_v1.api import api_router
 from app.core.config import ALLOWED_HOSTS, API_V1_STR, PROJECT_NAME
@@ -26,14 +27,6 @@ app.add_exception_handler(HTTP_422_UNPROCESSABLE_ENTITY, http_422_error_handler)
 
 app.include_router(api_router, prefix=API_V1_STR)
 
-from sqlalchemy_utils import create_database, database_exists
-
-if not database_exists(engine.url):
-    print("NIGGA")
-    from app.db.base import Base
-
-    create_database(engine.url)
-    Base.metadata.create_all(bind=engine)
 
 
 @app.middleware("http")
@@ -46,7 +39,4 @@ async def db_session_middleware(request: Request, call_next):
 
 if __name__ == "__main__":
     import uvicorn
-    from app.db.base import Base
-
-    Base.metadata.create_all(bind=engine)
     uvicorn.run(app, host="0.0.0.0", port=8000)

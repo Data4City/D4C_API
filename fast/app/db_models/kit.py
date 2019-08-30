@@ -4,16 +4,11 @@ from geoalchemy2.shape import from_shape, to_shape
 from geoalchemy2.types import Geometry
 from shapely.geometry import Point, mapping
 from sqlalchemy import Column, String, Integer, DateTime
-from sqlalchemy.orm import relationship, backref
-
-
-from app.db_models.manyToManyRelationships import values_from_sensor, sensors_in_kit
 
 from app.db.base_class import Base
 
 
 class Kit(Base):
-
     id = Column('id', Integer, primary_key=True)
     serial = Column('serial', String)
     created_at = Column("timestamp", DateTime(timezone=True), default=datetime.now())
@@ -35,7 +30,6 @@ class Kit(Base):
             'id': self.id,
             'serial': self.serial,
             'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-            'sensors_used': [s.as_dict for s in self.sensors_used],
             'location': self.get_position()
         }
 
