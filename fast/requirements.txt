@@ -6,7 +6,7 @@ Click==7.0
 databases==0.2.1
 dnspython==1.16.0
 email-validator==1.0.3
-fastapi==0.13.0
+fastapi
 gunicorn==19.9.0
 h11==0.8.1
 httptools==0.0.13

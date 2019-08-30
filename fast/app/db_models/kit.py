@@ -19,8 +19,8 @@ class Kit(Base):
     created_at = Column("timestamp", DateTime(timezone=True), default=datetime.now())
     geom = Column(Geometry(geometry_type='POINT', srid=4326))
 
-    sensors_used = relationship('Sensor', secondary=sensors_in_kit, backref=backref('kits', lazy='dynamic'))
-    values = relationship("Value", secondary=values_from_sensor)
+    # sensors_used = relationship('Sensor', secondary=sensors_in_kit, backref=backref('kits', lazy='dynamic'))
+    # values = relationship("Value", secondary=values_from_sensor)
 
     def __init__(self, serial):
         self.serial = serial

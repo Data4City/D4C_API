@@ -1,27 +1,27 @@
-# def on_get_single(self, req, resp, kit_id=None):
-#     try:
-#         kit = self.session.query(Kit).get(kit_id)
-#         if kit:
-#             resp.status = falcon.HTTP_200
-#             resp.json = kit.as_complete_dict
-#         else:
-#             resp.status = falcon.HTTP_404
-#             resp.json = {'error': "Kit with id {} doesn't exist".format(kit_id)}
-#     except falcon.HTTPBadRequest as e:
-#         resp.json = {'error': "Field 'id' is required"}
-from typing import List
 from sqlalchemy.orm import Session
-from app import crud
+from starlette.status import HTTP_201_CREATED, HTTP_200_OK
+from starlette.responses import Response
+
 
 from app.api.utils.db import get_db
 from app.models.kit import KitModel
 
+from app.crud import kit as crud_kit
 from fastapi import APIRouter, Body, Depends, HTTPException
-
 
 router = APIRouter()
 
 
-@router.get("/", response_model=KitModel)
-def get_single_kit(*,db: Session = Depends(get_db), kit_id: int ):
-    return crud.kit.get(db, kit_id=kit_id)
+@router.get("/", response_model=KitModel, status_code=HTTP_200_OK)
+def get_single_kit(*, db: Session = Depends(get_db), kit_id: int):
+    return crud_kit.get(db, kit_id=kit_id)
+
+
+@router.post("/", response_model=KitModel, status_code=HTTP_201_CREATED)
+def create_single_kit(*, db: Session = Depends(get_db), serial: str):
+    kit, created = crud_kit.create_single(db, serial=serial)
+
+    # if not created:
+    #     response.status_code = HTTP_200_OK
+
+    return kit

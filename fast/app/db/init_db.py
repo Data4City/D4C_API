@@ -6,8 +6,6 @@ from app.models.user import UserCreate
 # otherwise, SQL Alchemy might fail to initialize properly relationships
 # for more details: https://github.com/tiangolo/full-stack-fastapi-postgresql/issues/28
 from app.db import base
-from base_class import Base
-
 
 def init_db(db_session):
     # Tables should be created with Alembic migrations

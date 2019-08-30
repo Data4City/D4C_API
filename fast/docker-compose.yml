@@ -28,9 +28,6 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
-#    image: nsidnev/fastapi-realworld-example-app
-#    env_file:
-#      - .env
     environment:
       POSTGRES_HOST: "db"
       POSTGRES_PORT: "5432"

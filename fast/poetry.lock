@@ -100,6 +100,17 @@ starlette = "0.11.1"
 
 [[package]]
 category = "main"
+description = "Using SQLAlchemy with Spatial Databases"
+name = "geoalchemy2"
+optional = false
+python-versions = "*"
+version = "0.6.3"
+
+[package.dependencies]
+SQLAlchemy = ">=0.8"
+
+[[package]]
+category = "main"
 description = "WSGI HTTP Server for UNIX"
 name = "gunicorn"
 optional = false
@@ -329,7 +340,7 @@ python-versions = ">=3.4"
 version = "7.0"
 
 [metadata]
-content-hash = "25a18b2c1526533805199bc001318616a697818d178e108ed265cb8e606d098b"
+content-hash = "ae5f2fb91c59308fbdabb7f47445d839f43bf6cdc23bb0a83525d80bcce1c566"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -342,6 +353,7 @@ databases = ["da819f7e00dc7d8c2f0585ec53aa49bae63b366f800506097db2e87972a4d44f"]
 dnspython = ["36c5e8e38d4369a08b6780b7f27d790a292b2b08eea01607865bf0936c558e01", "f69c21288a962f4da86e56c4905b49d11aba7938d3d740e80d9e366ee4f1632d"]
 email-validator = ["ddc4b5b59fa699bb10127adcf7ad4de78fde4ec539a072b104b8bb16da666ae5"]
 fastapi = ["3104cc95fcfbfc08d16b4d133826c600f8d483cf4d4917ab82b53c37942e9de5", "5d3bbd1cf04bae3914bf93aa5f704a0931853e6a3a8065518c59b45433f20c27"]
+geoalchemy2 = ["0d1c9ea3ec13f6a522ccc3ffd2569ac524a6c6e80bab883e8805b28c48e77143", "4dc4c6c2bda0fc82cccab4aaff185a6570e13a5351d85e29e12984a55d4138ee"]
 gunicorn = ["aa8e0b40b4157b36a5df5e599f45c9c76d6af43845ba3b3b0efe2c70473c2471", "fa2662097c66f920f53f70621c6c58ca4a3c4d3434205e608e121b5b3b71f4f3"]
 h11 = ["acca6a44cb52a32ab442b1779adf0875c443c689e9e028f8d831a3769f9c5208", "f2b1ca39bfed357d1f19ac732913d5f9faa54a5062eca7d2ec3a916cfb7ae4c7"]
 httptools = ["e00cbd7ba01ff748e494248183abc6e153f49181169d8a3d41bb49132ca01dfc"]

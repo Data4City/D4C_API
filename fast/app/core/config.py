@@ -19,11 +19,8 @@ if not DATABASE_URL:
     POSTGRES_PASS = os.getenv("POSTGRES_PASSWORD", "postgres")
     POSTGRES_NAME = os.getenv("POSTGRES_DB", "postgres")
 
-    DATABASE_URL = DatabaseURL(
-        f"postgresql://{POSTGRES_USER}:{POSTGRES_PASS}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_NAME}"
-    )
-else:
-    DATABASE_URL = DatabaseURL(DATABASE_URL)
+    DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASS}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_NAME}"
+
 
 
 
