@@ -25,6 +25,8 @@ if not DATABASE_URL:
 else:
     DATABASE_URL = DatabaseURL(DATABASE_URL)
 
+
+
 MAX_CONNECTIONS_COUNT = int(os.getenv("MAX_CONNECTIONS_COUNT", 10))
 MIN_CONNECTIONS_COUNT = int(os.getenv("MIN_CONNECTIONS_COUNT", 10))
 SECRET_KEY = Secret(os.getenv("SECRET_KEY", "secret key for project"))

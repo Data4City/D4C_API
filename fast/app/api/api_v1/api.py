@@ -1,16 +1,7 @@
 from fastapi import APIRouter
 
-from .endpoints.article import router as article_router
-from .endpoints.authenticaion import router as auth_router
-from .endpoints.comment import router as comment_router
-from .endpoints.profile import router as profile_router
-from .endpoints.tag import router as tag_router
-from .endpoints.user import router as user_router
+from app.api.api_v1.endpoints import kit
 
-router = APIRouter()
-router.include_router(auth_router)
-router.include_router(user_router)
-router.include_router(profile_router)
-router.include_router(comment_router)
-router.include_router(article_router)
-router.include_router(tag_router)
+api_router = APIRouter()
+
+api_router.include_router(kit.router, prefix="/kit", tags=["kits"])
