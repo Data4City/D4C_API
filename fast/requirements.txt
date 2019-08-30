@@ -30,3 +30,6 @@ Unidecode==1.0.23
 uvicorn==0.6.1
 uvloop==0.12.2
 websockets==7.0
+geoalchemy2
+shapely
+sqlalchemy_utils

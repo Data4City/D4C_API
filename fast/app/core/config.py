@@ -29,5 +29,7 @@ MAX_CONNECTIONS_COUNT = int(os.getenv("MAX_CONNECTIONS_COUNT", 10))
 MIN_CONNECTIONS_COUNT = int(os.getenv("MIN_CONNECTIONS_COUNT", 10))
 SECRET_KEY = Secret(os.getenv("SECRET_KEY", "secret key for project"))
 
-PROJECT_NAME = os.getenv("PROJECT_NAME", "FastAPI example application")
+PROJECT_NAME = os.getenv("PROJECT_NAME", "D4C API")
 ALLOWED_HOSTS = CommaSeparatedStrings(os.getenv("ALLOWED_HOSTS", ""))
+
+

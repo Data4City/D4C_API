@@ -20,6 +20,8 @@ python-slugify = "^3.0"
 Unidecode = "^1.0"
 python-dotenv = "^0.10.1"
 databases = "^0.2.1"
+shapely = "^1.6"
+sqlalchemy_utils = "^0.34.2"
 
 
 [tool.poetry.dev-dependencies]
