@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_201_CREATED, HTTP_200_OK
@@ -5,7 +7,7 @@ from starlette.responses import Response
 
 from app.api.utils.db import get_db
 from app.crud import kit as crud_kit
-from app.models.kit import KitFullModel
+from app.models.kit import KitFullModel, KitUpdate
 
 router = APIRouter()
 
@@ -16,9 +18,12 @@ def get_single_kit(*, db: Session = Depends(get_db), kit_id: int):
 
 
 @router.post("/", response_model=KitFullModel, status_code=HTTP_201_CREATED)
-def create_single_kit(*, db: Session = Depends(get_db), serial: str, response: Response):
+def create_single_kit(*, db: Session = Depends(get_db), serial: str, response: Response, body: Optional[KitUpdate] ):
     kit, created = crud_kit.create_single(db, serial=serial)
 
+    if body:
+        if body.longitude and body.latitude:
+            kit.set_location(body.longitude, body.latitude)
     if not created:
         response.status_code = HTTP_200_OK
 
