@@ -1,21 +1,15 @@
-#!/bin/bash
+FROM python:3.7
 
+COPY poetry.lock /
+COPY pyproject.toml .
+RUN pip install poetry && \
+    poetry config settings.virtualenvs.create false && \
+    poetry install
 
-FROM pypy:3.6
+COPY . /
 
+EXPOSE 8000
 
-RUN apt-get update -y
-#RUN apt-get install -y python3 python-pip-whl python3-pip python3-setuptools curl
-RUN apt-get -y install libgeos-c1v5
-RUN apt-get -y install libgeos-dev
+CMD alembic upgrade head && \
+    gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0
 
-
-RUN rm -rf /var/lib/apt/lists/*
-
-COPY ./app /app
-WORKDIR /app
-#RUN pip3 install wheel
-RUN pip install --no-cache-dir -r /app/requirements.txt
-
-
-CMD ["pypy3", "standalone_debug.py"]

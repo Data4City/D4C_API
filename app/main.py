@@ -1,52 +1,42 @@
-import logging
-
-import falcon
-from falcon import API
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session
-from sqlalchemy.orm import sessionmaker
+from fastapi import FastAPI
+from starlette.exceptions import HTTPException
+from starlette.middleware.cors import CORSMiddleware
+from starlette.requests import Request
+from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 from sqlalchemy_utils import create_database, database_exists
 
-import routes
-from Helpers.Middlewares import SQLAlchemySessionManager, Jsonify, ResponseLoggerMiddleware
-from Helpers.helper_functions import create_db_connection_url
+from app.api.api_v1.api import api_router
+from app.core.config import ALLOWED_HOSTS, API_V1_STR, PROJECT_NAME
+from app.core.errors import http_422_error_handler, http_error_handler
+from app.db.session import Session, engine
+app = FastAPI(title=PROJECT_NAME)
+
+if not ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_HOSTS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.add_exception_handler(HTTPException, http_error_handler)
+app.add_exception_handler(HTTP_422_UNPROCESSABLE_ENTITY, http_422_error_handler)
+
+app.include_router(api_router, prefix=API_V1_STR)
 
 
-def get_app() -> API:
-    engine = create_engine(create_db_connection_url())
-    if not database_exists(engine.url):
-        from Models import Base
-        logging.getLogger("mainapp." + __name__).info("Creating database")
-        create_database(engine.url)
-        Base.metadata.create_all(bind=engine)
 
-    session_factory = sessionmaker(bind=engine)
-    Session = scoped_session(session_factory)
-
-    _app = falcon.API(middleware=[SQLAlchemySessionManager(Session), Jsonify.Middleware(help_messages=True),
-                                  ResponseLoggerMiddleware()])
-
-    routes.add_routes(_app)
-
-    return _app
+@app.middleware("http")
+async def db_session_middleware(request: Request, call_next):
+    request.state.db = Session()
+    response = await call_next(request)
+    request.state.db.close()
+    return response
 
 
-def speed_up_logs():
-    from logging.handlers import QueueHandler, QueueListener
-
-    FORMAT = '%(asctime)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO, format=FORMAT)
-    rootLogger = logging.getLogger("mainapp." + __name__)
-
-    from Helpers.EvictQueue import EvictQueue
-    log_que = EvictQueue(1000)
-    queue_handler = QueueHandler(log_que)
-    queue_listener =QueueListener(log_que, *rootLogger.handlers)
-    queue_listener.start()
-
-    gunicorn_logger = logging.getLogger('gunicorn.error')
-    rootLogger.setLevel(gunicorn_logger.level)
-    rootLogger.handlers = [queue_handler, gunicorn_logger.handlers]
-
-speed_up_logs()
-app = get_app()
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
