@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_201_CREATED, HTTP_200_OK, HTTP_400_BAD_REQUEST
+from starlette.status import HTTP_201_CREATED, HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from starlette.responses import Response
 
 from app.api.utils.db import get_db
@@ -17,15 +17,18 @@ router = APIRouter()
 def get_single_kit(*, db: Session = Depends(get_db), kit_id: int):
     kit = crud_kit.get_single(db, kit_id=kit_id)
     if not kit:
-        raise HTTPException(status_code=404, detail="Kit not found")
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Kit not found")
 
     return kit.as_complete_dict
 
 
 @router.get("/", response_model=List[KitFullModel], status_code=HTTP_200_OK)
 def get_multiple_kits(*, db: Session = Depends(get_db), amount: Optional[int]):
-    if not amount: amount = 10
-    if not 0 < amount <= 200: raise HTTPException(HTTP_400_BAD_REQUEST, "Amount should be between the range 1 to 200")
+    if not amount:
+        amount = 10
+    if not 0 < amount <= 200:
+        raise HTTPException(HTTP_400_BAD_REQUEST, "Amount should be between the range 1 to 200")
+
     return [k.as_complete_dict for k in crud_kit.get_multi(db, amount=amount)]
 
 
@@ -36,7 +39,8 @@ def create_single_kit(*, db: Session = Depends(get_db), serial: str, response: R
     if not created:
         response.status_code = HTTP_200_OK
 
-    if body: update_kit(kit, body)
+    if body:
+        update_kit(kit, body)
     return kit.as_complete_dict
 
 
@@ -45,7 +49,7 @@ def update_single_kit(*, db: Session = Depends(get_db), kit_id: int, body: KitUp
     kit = crud_kit.get_single(db, kit_id=kit_id)
 
     if not kit:
-        raise HTTPException(status_code=404, detail="Kit not found")
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Kit not found")
 
     return update_kit(kit, body).as_complete_dict
 
