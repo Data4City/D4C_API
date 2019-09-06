@@ -9,6 +9,7 @@ from app.api.api_v1.api import api_router
 from app.core.config import ALLOWED_HOSTS, API_V1_STR, PROJECT_NAME
 from app.core.errors import http_422_error_handler, http_error_handler
 from app.db.session import Session, engine
+
 app = FastAPI(title=PROJECT_NAME)
 
 if not ALLOWED_HOSTS:
@@ -28,7 +29,6 @@ app.add_exception_handler(HTTP_422_UNPROCESSABLE_ENTITY, http_422_error_handler)
 app.include_router(api_router, prefix=API_V1_STR)
 
 
-
 @app.middleware("http")
 async def db_session_middleware(request: Request, call_next):
     request.state.db = Session()
@@ -39,4 +39,5 @@ async def db_session_middleware(request: Request, call_next):
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
