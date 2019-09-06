@@ -1,3 +1,4 @@
+PIL
 alembic==1.0.8
 asyncpg==0.18.3
 bcrypt==3.1.6
@@ -33,3 +34,4 @@ websockets==7.0
 geoalchemy2
 shapely
 sqlalchemy_utils
+python-multipart
