@@ -1,3 +1,4 @@
+FROM tensorflow/serving:latest
 
 COPY ./urbanSound /models/urbanSound
 

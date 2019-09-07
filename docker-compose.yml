@@ -26,13 +26,19 @@ services:
       - ./var/lib/postgresql/data
   tf:
     build:
-      dockerfile: tensorflowServe/Dockerfile
-      context: ./
+      dockerfile: Dockerfile
+      context: ./tensorflowServe
+    ports:
+      - "8500:8500"
+      - "8501:8501"
+    command: --model_config_file=/config/config.conf
+
   backend:
     restart: unless-stopped
     build:
       dockerfile: Dockerfile
       context: .
+
     environment:
       POSTGRES_HOST: "db"
       POSTGRES_PORT: "5432"
