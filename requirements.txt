@@ -35,3 +35,6 @@ geoalchemy2
 shapely
 sqlalchemy_utils
 python-multipart
+librosa
+numpy
+requests

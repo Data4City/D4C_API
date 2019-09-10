@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "D4C API"
+name = "D4CAPI"
 version = "0.1.0"
 description = "Small api used for the sensors in D4C"
 authors = ["Dan Amador"]
@@ -24,6 +24,9 @@ shapely = "^1.6"
 sqlalchemy_utils = "^0.34.2"
 geoalchemy2 = "^0.6.3"
 python-multipart = "^0.0.5"
+numpy = "^1.17"
+requests = "^2.22"
+librosa = "^0.7.0"
 
 
 [tool.poetry.dev-dependencies]
