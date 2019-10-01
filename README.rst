@@ -40,7 +40,7 @@ After all of that is done run:
 
 ::
 
-        alembic revision -m "Add a column"
+        alembic revision -m "Description of the migration"
 
 This will create a new migration inside of alembic/versions.
 Modify it accordingly so other automatic changes aren't inserted.
@@ -52,6 +52,20 @@ To apply the changes to the DB run
     alembic upgrade head
 
 
+Inference Models
+----------------
+
+A separate docker container is used to run the Tensorflow Models as a service.
+The `UrbanSound model <https://github.com/DanAmador/UrbanSound>`_ was trained using the
+`UrbanSound8k dataset <https://urbansounddataset.weebly.com/urbansound8k.html>`_ and the architecture was inspired by `this paper <http://karol.piczak.com/papers/Piczak2015-ESC-ConvNet.pdf>`_
+
+
+To update the model just retrain it with the provided link and replace the folder inside tensorflowServe/urbanSound/1 or if you wish to add various versions of it you can also create a new folder with the new version number
+
+
 Todo
 ----
-1) Add python tests
+1) Expand uploading of data to create new dataset
+2) Create dataset dump
+3) Security
+4) Add tests
