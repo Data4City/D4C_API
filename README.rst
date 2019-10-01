@@ -40,7 +40,7 @@ After all of that is done run:
 
 ::
 
-        alembic revision -m "Description of the migration"
+        alembic revision --autogenerate -m "Description of the migration"
 
 This will create a new migration inside of alembic/versions.
 Modify it accordingly so other automatic changes aren't inserted.
