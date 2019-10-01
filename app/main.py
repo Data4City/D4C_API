@@ -39,7 +39,6 @@ async def db_session_middleware(request: Request, call_next):
     return response
 
 
-
 if __name__ == "__main__":
     import uvicorn
 

@@ -51,8 +51,6 @@ async def _save_file(content, db: Session):
 async def upload_file(*, db: Session = Depends(get_db), file: UploadFile = File(...)):
     print(file.content_type)
     ctype = file.content_type
-    # if ctype == "image/jpeg":
-    #     await _process_image(await file.read(), db)
     try:
         if ctype == "audio/wav":
             with tempfile.NamedTemporaryFile(suffix=".wav", prefix=path.basename(__file__)) as tmp:
