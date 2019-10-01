@@ -29,6 +29,29 @@ Application parts are:
     main.py - FastAPI application instance, CORS configuration and api router including
 
 
+
+Upgrade DB
+----------
+Alembic is used to keep track of the migrations and uses SQLAlchemy as its backend.
+
+To create a new migration modify the models inside of db_models and if you add/delete models make sure to change the imports inside of app/db/base.py
+
+After all of that is done run:
+
+::
+
+        alembic revision -m "Add a column"
+
+This will create a new migration inside of alembic/versions.
+Modify it accordingly so other automatic changes aren't inserted.
+
+To apply the changes to the DB run
+
+::
+
+    alembic upgrade head
+
+
 Todo
 ----
 1) Add python tests
