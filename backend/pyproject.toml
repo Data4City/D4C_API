@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "D4CAPI"
 version = "0.1.0"
-description = "Small api used for the sensors in D4C"
+description = "Small api used as a POC in the D4C project"
 authors = ["Dan Amador"]
 license = "MIT"
 
