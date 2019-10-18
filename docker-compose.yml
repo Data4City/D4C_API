@@ -43,6 +43,9 @@ services:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
       POSTGRES_DB: "test"
+      BACKEND_CORS_ORIGINS: "http://localhost, http://localhost:4200, http://localhost:3000, http://localhost:8080, https://localhost, https://localhost:4200, https://localhost:3000, https://localhost:8080, http://dev.data4.city, https://stag.data4.city, https://data4.city "
+      FIRST_SUPERUSER: "admin@d4c_api.com"
+      FIRST_SUPERUSER_PASSWORD: "admin"
     depends_on:
       - db
       - tf

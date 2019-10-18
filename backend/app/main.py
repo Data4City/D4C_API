@@ -3,32 +3,34 @@ from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
-from sqlalchemy_utils import create_database, database_exists
-
 
 from app.api.api_v1.api import api_router
-from app.core.config import ALLOWED_HOSTS, API_V1_STR, PROJECT_NAME
+from app.core import config
 from app.core.errors import http_422_error_handler, http_error_handler
-from app.db.session import Session, engine
+from app.db.session import Session
 
+app = FastAPI(title=config.PROJECT_NAME)
 
-app = FastAPI(title=PROJECT_NAME)
+origins = []
 
-if not ALLOWED_HOSTS:
-    ALLOWED_HOSTS = ["*"]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=ALLOWED_HOSTS,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Set all CORS enabled origins
+if config.BACKEND_CORS_ORIGINS:
+    origins_raw = config.BACKEND_CORS_ORIGINS.split(",")
+    for origin in origins_raw:
+        use_origin = origin.strip()
+        origins.append(use_origin)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    ),
 
 app.add_exception_handler(HTTPException, http_error_handler)
 app.add_exception_handler(HTTP_422_UNPROCESSABLE_ENTITY, http_422_error_handler)
 
-app.include_router(api_router, prefix=API_V1_STR)
+app.include_router(api_router, prefix=config.API_V1_STR)
 
 
 @app.middleware("http")

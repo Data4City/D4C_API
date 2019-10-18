@@ -17,10 +17,10 @@ router = APIRouter()
 
 @router.get("/", response_model=List[User])
 def read_users(
-    db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
-    current_user: DBUser = Depends(get_current_active_superuser),
+        db: Session = Depends(get_db),
+        skip: int = 0,
+        limit: int = 100,
+        current_user: DBUser = Depends(get_current_active_superuser),
 ):
     """
     Retrieve users.
@@ -31,10 +31,10 @@ def read_users(
 
 @router.post("/", response_model=User)
 def create_user(
-    *,
-    db: Session = Depends(get_db),
-    user_in: UserCreate,
-    current_user: DBUser = Depends(get_current_active_superuser),
+        *,
+        db: Session = Depends(get_db),
+        user_in: UserCreate,
+        current_user: DBUser = Depends(get_current_active_superuser),
 ):
     """
     Create new user.
@@ -52,12 +52,12 @@ def create_user(
 
 @router.put("/me", response_model=User)
 def update_user_me(
-    *,
-    db: Session = Depends(get_db),
-    password: str = Body(None),
-    full_name: str = Body(None),
-    email: EmailStr = Body(None),
-    current_user: DBUser = Depends(get_current_active_user),
+        *,
+        db: Session = Depends(get_db),
+        password: str = Body(None),
+        full_name: str = Body(None),
+        email: EmailStr = Body(None),
+        current_user: DBUser = Depends(get_current_active_user),
 ):
     """
     Update own user.
@@ -76,8 +76,8 @@ def update_user_me(
 
 @router.get("/me", response_model=User)
 def read_user_me(
-    db: Session = Depends(get_db),
-    current_user: DBUser = Depends(get_current_active_user),
+        db: Session = Depends(get_db),
+        current_user: DBUser = Depends(get_current_active_user),
 ):
     """
     Get current user.
@@ -87,11 +87,11 @@ def read_user_me(
 
 @router.post("/open", response_model=User)
 def create_user_open(
-    *,
-    db: Session = Depends(get_db),
-    password: str = Body(...),
-    email: EmailStr = Body(...),
-    full_name: str = Body(None),
+        *,
+        db: Session = Depends(get_db),
+        password: str = Body(...),
+        email: EmailStr = Body(...),
+        full_name: str = Body(None),
 ):
     """
     Create new user without the need to be logged in.
@@ -114,9 +114,9 @@ def create_user_open(
 
 @router.get("/{user_id}", response_model=User)
 def read_user_by_id(
-    user_id: int,
-    current_user: DBUser = Depends(get_current_active_user),
-    db: Session = Depends(get_db),
+        user_id: int,
+        current_user: DBUser = Depends(get_current_active_user),
+        db: Session = Depends(get_db),
 ):
     """
     Get a specific user by id.
@@ -133,12 +133,11 @@ def read_user_by_id(
 
 @router.put("/{user_id}", response_model=User)
 def update_user(
-    *,
-    db: Session = Depends(get_db),
-    user_id: int,
-    user_in: UserUpdate,
-    current_user: UserInDB = Depends(get_current_active_superuser),
-):
+        *,
+        db: Session = Depends(get_db),
+        user_id: int,
+        user_in: UserUpdate,
+        current_user: UserInDB = Depends(get_current_active_superuser)):
     """
     Update a user.
     """
@@ -149,4 +148,13 @@ def update_user(
             detail="The user with this username does not exist in the system",
         )
     user = crud.user.update(db, user=user, user_in=user_in)
+    return user
+
+
+@router.put("/create_first", response_model=User)
+def create_first_user(
+        *,
+        db: Session = Depends(get_db)):
+    from ....db.init_db import init_db
+    user = init_db()
     return user
