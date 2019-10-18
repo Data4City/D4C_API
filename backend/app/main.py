@@ -5,10 +5,12 @@ from starlette.requests import Request
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 from sqlalchemy_utils import create_database, database_exists
 
+
 from app.api.api_v1.api import api_router
 from app.core.config import ALLOWED_HOSTS, API_V1_STR, PROJECT_NAME
 from app.core.errors import http_422_error_handler, http_error_handler
 from app.db.session import Session, engine
+
 
 app = FastAPI(title=PROJECT_NAME)
 
