@@ -49,7 +49,6 @@ async def _save_file(content, db: Session):
 
 @router.post("/upload")
 async def upload_file(*, db: Session = Depends(get_db), file: UploadFile = File(...)):
-    print(file.content_type)
     ctype = file.content_type
     try:
         if ctype == "audio/wav":
