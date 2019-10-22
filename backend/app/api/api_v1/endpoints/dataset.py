@@ -1,16 +1,17 @@
+import json
+from typing import List
+
 import librosa
-import tempfile
 import numpy as np
 import requests
-import json
-from os import path
-from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
+from fastapi import APIRouter, Depends, File, UploadFile, HTTPException
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR
 
+import app.crud as crud
 from app.api.utils.db import get_db
-from db_models.dbfile import DBFile
-from db_models.inference import LabelsEnum
+from app.db_models.dataset import DBFile
+from app.models.label import Label
+from starlette.responses import Response
 
 router = APIRouter()
 
@@ -47,22 +48,57 @@ async def _save_file(content, db: Session):
     db.commit()
 
 
-@router.post("/upload")
-async def upload_file(*, db: Session = Depends(get_db), file: UploadFile = File(...)):
-    ctype = file.content_type
-    try:
-        if ctype == "audio/wav":
-            with tempfile.NamedTemporaryFile(suffix=".wav", prefix=path.basename(__file__)) as tmp:
-                b = await file.read()
-                tmp.write(b)
-                return [{LabelsEnum(i).name: float("{0:.2f}".format(val)) for i, val in enumerate(result)} for result in
-                        await get_single_inference(await get_features(path.join(tempfile.gettempdir(), str(tmp.name))))]
+@router.post("/label", response_model=Label, status_code=201)
+def create_label(*, db: Session = Depends(get_db), label: str, response: Response):
+    (created, label) = crud.dataset.create_label(db, label=label)
 
-            # save_image(process_audio(await file.read()))
-        else:
-            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="Only wav and jpeg supported")
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        print(e)
-        raise HTTPException(status_code=HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to process file")
+    if not created:
+        response.status_code = 200
+
+    return label
+
+
+@router.get("Label", response_model=List[Label])
+def get_all_labels(*, db: Session = Depends(get_db)):
+    labels = crud.dataset.get_all_labels(db)
+    return labels
+
+
+@router.put("/label/{label_id}", response_model=Label )
+def update_label(*, db: Session = Depends(get_db), new_name: str, label_id: int, response: Response):
+    label = crud.dataset.update_label(db_session=db, label_id=label_id, new_name= new_name)
+    if label:
+        return label
+
+    raise HTTPException(
+        status_code=400, detail=f'Label with id: {label_id} does not exist'
+    )
+
+
+@router.post("/upload", )
+async def upload_file(*, db: Session = Depends(get_db), label_id: int, file: UploadFile = File(...)):
+    ctype = file.content_type
+
+    if ctype == "audio/wav":
+        label = crud.dataset.get_label(db, label_id=label_id)
+        crud.dataset.upload_dataset_entry(db, label=label, dbfile=file)
+
+# @router.post("/upload")
+# async def upload_file(*, db: Session = Depends(get_db), file: UploadFile = File(...)):
+#     ctype = file.content_type
+#     try:
+#         if ctype == "audio/wav":
+#             with tempfile.NamedTemporaryFile(suffix=".wav", prefix=path.basename(__file__)) as tmp:
+#                 b = await file.read()
+#                 tmp.write(b)
+#                 return [{LabelsEnum(i).name: float("{0:.2f}".format(val)) for i, val in enumerate(result)} for result in
+#                         await get_single_inference(await get_features(path.join(tempfile.gettempdir(), str(tmp.name))))]
+#
+#             # save_image(process_audio(await file.read()))
+#         else:
+#             raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="Only wav and jpeg supported")
+#     except HTTPException as e:
+#         raise e
+#     except Exception as e:
+#         print(e)
+#         raise HTTPException(status_code=HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to process file")
