@@ -16,4 +16,9 @@ def init_db(db_session):
             is_superuser=True,
         )
         user = crud.user.create(db_session, user_in=user_in)
-        return user
+
+    start_labels = ("children_playing", "air_conditioner", "car_horn", "dog_bark",
+                    "drilling", "engine_idling", "gun_shot", "jackhammer", "siren", "street_music")
+
+    for label in start_labels:
+        crud.dataset.create_label(db_session, label=label)

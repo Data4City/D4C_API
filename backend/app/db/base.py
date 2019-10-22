@@ -2,5 +2,5 @@
 # imported by Alembic
 from app.db.base_class import Base  # noqa
 from app.db_models.kit import Kit # noga
-from app.db_models.dbfile import DBFile # noga
-from app.db_models.inference import Inference, Labels  # noga
+from app.db_models.dataset import Label, DBFile # noga
+from app.db_models.user import User # noga

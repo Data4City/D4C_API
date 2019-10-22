@@ -1,29 +1,15 @@
 from enum import Enum
 
-from sqlalchemy import Column, String, Integer, Float, ForeignKey
-from sqlalchemy import Enum as EnumDB
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, LargeBinary
 from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
 
 
-class LabelsEnum(Enum):
-    air_conditioner = 0
-    car_horn = 1
-    children_playing = 2
-    dog_bark = 3
-    drilling = 4
-    engine_idling = 5
-    gun_shot = 6
-    jackhammer = 7
-    siren = 8
-    street_music = 9
-
-
-class Labels(Base):
-    id = Column(Integer, primary_key=True)
-    label = Column(EnumDB(LabelsEnum))
-    dataset_entry = relationship("DBFile")
+class Label(Base):
+    id = Column(Integer, primary_key=True, index=True)
+    label = Column(String, unique=True, index=True)
+    dataset_entry = relationship("DBFile", backref="label")
 
 
 class Inference(Base):
@@ -31,4 +17,12 @@ class Inference(Base):
     accuracy = Column('accuracy', Float)
     model_used = Column(String(40), nullable=False)
     file_id = Column(Integer, ForeignKey('dbfile.id'))
-    predicted_label = Column(Integer, ForeignKey("labels.id"))
+    predicted_label = Column(Integer, ForeignKey("label.id"))
+
+
+class DBFile(Base):
+    id = Column('id', Integer, primary_key=True)
+    data = Column('data', LargeBinary, nullable=False, unique=True)
+    label_id = Column(Integer, ForeignKey("label.id"))
+    # inferences = relationship("Inference")
+
