@@ -34,7 +34,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['predicted_label'], ['label.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.drop_table('spatial_ref_sys')
     op.create_unique_constraint(None, 'dbfile', ['data'])
     # ### end Alembic commands ###
 

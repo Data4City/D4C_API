@@ -1,10 +1,10 @@
 from typing import Optional
 
-from pydantic import BaseModel
 
+from .dbmodel import DBModelMixin
 
 # Shared properties
-class UserBase(BaseModel):
+class UserBase(DBModelMixin):
     email: Optional[str] = None
     is_active: Optional[bool] = True
     is_superuser: Optional[bool] = False

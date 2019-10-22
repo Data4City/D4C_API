@@ -2,7 +2,7 @@ FROM python:3.7
 
 COPY poetry.lock /
 COPY pyproject.toml .
-RUN pip3 install poetry --user
+RUN pip install poetry
 RUN poetry config settings.virtualenvs.create false
 RUN poetry install
 

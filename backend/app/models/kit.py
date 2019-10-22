@@ -1,18 +1,19 @@
-from pydantic import BaseModel
 from datetime import datetime
 from typing import Dict
 
+from .dbmodel import DBModelMixin
 
-class KitCreate(BaseModel):
+
+class KitCreate(DBModelMixin):
     serial: str = None
     id: int = 0
 
 
-class KitUpdate(BaseModel):
+class KitUpdate(DBModelMixin):
     longitude: float = None
     latitude: float = None
 
 
-class KitFullModel(KitCreate) :
+class KitFullModel(KitCreate):
     created_at: datetime = datetime.now()
     location: Dict = {}
