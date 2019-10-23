@@ -22,7 +22,7 @@ class Inference(Base):
 
 class DBFile(Base):
     id = Column('id', Integer, primary_key=True)
-    data = Column('data', LargeBinary, nullable=False, unique=True)
+    data = Column('data', LargeBinary, nullable=False)
     label_id = Column(Integer, ForeignKey("label.id"))
     # inferences = relationship("Inference")
 

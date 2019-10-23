@@ -22,3 +22,5 @@ def init_db(db_session):
 
     for label in start_labels:
         crud.dataset.create_label(db_session, label=label)
+
+    return user

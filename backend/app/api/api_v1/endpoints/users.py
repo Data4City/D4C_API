@@ -11,6 +11,7 @@ from app.api.utils.security import get_current_active_superuser, get_current_act
 from app.core import config
 from app.db_models.user import User as DBUser
 from app.models.user import User, UserCreate, UserInDB, UserUpdate
+from ....db.init_db import init_db
 
 router = APIRouter()
 
@@ -151,10 +152,6 @@ def update_user(
     return user
 
 
-@router.put("/create_first", response_model=User)
-def create_first_user(
-        *,
-        db: Session = Depends(get_db)):
-    from ....db.init_db import init_db
-    user = init_db()
-    return user
+@router.post("/create_first", response_model=UserInDB)
+def create_first_user(*,db: Session = Depends(get_db)):
+    return init_db(db)

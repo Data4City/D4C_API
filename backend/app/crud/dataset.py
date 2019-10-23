@@ -8,7 +8,7 @@ from app.db.helpers import get_or_create
 
 
 def create_label(db_session: Session, *, label: str):
-    label_obj = get_label(db_session, label)
+    label_obj = get_label(db_session, label=label)
     if not label_obj:
         label_obj = Label(
             label=label
@@ -38,7 +38,7 @@ def get_file(db_session: Session, file_id: int):
 
 
 def upload_dataset_entry(db_session: Session, *, dbfile: UploadFile, label: Label):
-    return get_or_create(db_session, DBFile, kwargs={"data": dbfile.file.read(), "label": label})
+    return get_or_create(db_session, DBFile, data=dbfile.file.read(), label=label)
 
 
 def update_label(db_session: Session, label_id: int, new_name: str):

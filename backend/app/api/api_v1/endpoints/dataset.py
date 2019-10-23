@@ -12,6 +12,7 @@ from app.api.utils.db import get_db
 from app.db_models.dataset import DBFile
 from app.models.label import Label
 from starlette.responses import Response
+from starlette.responses import FileResponse
 
 router = APIRouter()
 
@@ -58,15 +59,15 @@ def create_label(*, db: Session = Depends(get_db), label: str, response: Respons
     return label
 
 
-@router.get("Label", response_model=List[Label])
+@router.get("/label", response_model=List[Label])
 def get_all_labels(*, db: Session = Depends(get_db)):
     labels = crud.dataset.get_all_labels(db)
     return labels
 
 
-@router.put("/label/{label_id}", response_model=Label )
+@router.put("/label/{label_id}", response_model=Label)
 def update_label(*, db: Session = Depends(get_db), new_name: str, label_id: int, response: Response):
-    label = crud.dataset.update_label(db_session=db, label_id=label_id, new_name= new_name)
+    label = crud.dataset.update_label(db_session=db, label_id=label_id, new_name=new_name)
     if label:
         return label
 
@@ -75,13 +76,18 @@ def update_label(*, db: Session = Depends(get_db), new_name: str, label_id: int,
     )
 
 
-@router.post("/upload", )
+@router.post("/entry", status_code=201)
 async def upload_file(*, db: Session = Depends(get_db), label_id: int, file: UploadFile = File(...)):
     ctype = file.content_type
 
     if ctype == "audio/wav":
         label = crud.dataset.get_label(db, label_id=label_id)
         crud.dataset.upload_dataset_entry(db, label=label, dbfile=file)
+
+
+@router.post("/file/{file_id}", status_code=200)
+async def get_file(*, db: Session = Depends(get_db), file_id: int, metadata: bool = False):
+    dbfile = crud.dataset.get_file(db_session=db, file_id=file_id)
 
 # @router.post("/upload")
 # async def upload_file(*, db: Session = Depends(get_db), file: UploadFile = File(...)):

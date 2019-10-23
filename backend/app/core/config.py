@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from starlette.datastructures import CommaSeparatedStrings, Secret
 from databases import DatabaseURL
 
-API_V1_STR = "/api"
+API_V1_STR = "/api/v1"
 
 JWT_TOKEN_PREFIX = "Token"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # one week
@@ -23,8 +23,8 @@ if not DATABASE_URL:
 
 MAX_CONNECTIONS_COUNT = int(os.getenv("MAX_CONNECTIONS_COUNT", 10))
 MIN_CONNECTIONS_COUNT = int(os.getenv("MIN_CONNECTIONS_COUNT", 10))
-SECRET_KEY = Secret(os.getenv("SECRET_KEY", "secret key for project"))
+SECRET_KEY = os.getenv("SECRET_KEY", "secret key for project")
 
 PROJECT_NAME = os.getenv("PROJECT_NAME", "D4C API")
 ALLOWED_HOSTS = CommaSeparatedStrings(os.getenv("ALLOWED_HOSTS", ""))
-BACKEND_CORS_ORIGINS = os.getenv("BACKEND_CORS_ORIGINS")
+BACKEND_CORS_ORIGINS = os.getenv("BACKEND_CORS_ORIGINS", "http://localhost, http://localhost:4200, http://localhost:3000, http://localhost:8080")
